@@ -8,19 +8,18 @@ from django.http import HttpResponse
 
 
 def login(request):
-    return render(request, "main/login.html")
-
+    return render(request, "login.html")
 
 def home(request):
-    return render(request, "main/home.html")
+    return render(request, 'home.html')
 
 
 def tests(request):
-    return render(request, "main/tests.html")
+    return render(request, "tests.html")
 
 
 def test(request):
-    return render(request, "main/test.html")
+    return render(request, "test.html")
 
 def register(request):
     if request.method == 'POST':
@@ -29,14 +28,10 @@ def register(request):
             new_user = form.save(commit=False)
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
-            return render(request, 'main/register_done.html', {'new_user': new_user})
+            return render(request, 'register_done.html', {'new_user': new_user})
     else:
         form = UserRegistrationForm()
-    return render(request, 'main/register.html', {'form': form})
-
-from django.contrib.auth import authenticate, login
-from django.shortcuts import redirect
-from django.http import HttpResponse
+    return render(request, 'register.html', {'form': form})
 
 def simple_login(request):
     if request.method == "POST":

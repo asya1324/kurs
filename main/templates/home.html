@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itestoria – Home</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+    <!-- ---------- Navbar ---------- -->
+    <header class="navbar">
+        <div class="brand">
+            Itestoria<span class="dot"></span>
+        </div>
+        <nav class="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'tests' %}">Tests</a>
+            <a href="{% url 'register' %}" class="btn">Sign up</a>
+        </nav>
+    </header>
+
+    <!-- ---------- Hero Section ---------- -->
+    <main class="hero">
+        <div class="hero-text">
+            <h1>Welcome to <span>Itestoria</span></h1>
+            <p>
+                A space where learning meets simplicity. Create your account, explore tests, 
+                and track your growth — all in one place.
+            </p>
+            <a href="{% url 'tests' %}" class="main-btn">Start Testing</a>
+        </div>
+        <div class="hero-image">
+            <img src="{% static 'images/home.jpg' %}" alt="">
+        </div>
+    </main>
+
+    <!-- ---------- Footer ---------- -->
+    <footer class="footer">
+        © 2025 Itestoria. All rights reserved.
+    </footer>
+</body>
+</html>
