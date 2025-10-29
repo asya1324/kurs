@@ -63,8 +63,68 @@
                     placeholder="Repeat password">
             </div>
 
-            <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
-            <button type="submit">Sign up</button>
+            <p style="margin-top: 20px; text-align: center;">
+                Already have an account?
+                <button type="button" id="showLogin" style="
+            background: none;
+            border: none;
+            color: #b40030;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 6px;
+            ">Log in</button>
+            </p>
+
+            <div id="loginForm" style="display: none; text-align: center; margin-top: 15px;">
+                <form action="{% url 'login' %}" method="post" style="display: inline-block; text-align: left;">
+                    {% csrf_token %}
+                    <input type="text" name="username" placeholder="Username" required style="display: block; width: 250px; padding: 10px 12px; margin-bottom: 10px;
+             border: 2px solid transparent; border-radius: 8px;
+             background: #fff; color: #000; font-size: 15px; outline: none;
+             transition: 0.2s;">
+
+                    <input type="password" name="password" placeholder="Password" required style="display: block; width: 250px; padding: 10px 12px; margin-bottom: 10px;
+             border: 2px solid transparent; border-radius: 8px;
+             background: #fff; color: #000; font-size: 15px; outline: none;
+             transition: 0.2s;">
+
+                    <button type="submit" style="
+                display: block;
+                width: 100%;
+                background: #b40030;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                padding: 10px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: 0.25s;
+                ">Sign in</button>
+                </form>
+            </div>
+
+            <script>
+                document.getElementById("showLogin").addEventListener("click", () => {
+                    const form = document.getElementById("loginForm");
+                    form.style.display = form.style.display === "none" ? "block" : "none";
+                });
+            </script>
+
+            <style>
+                ::placeholder {
+                    color: #888;
+                }
+
+                input:focus {
+                    border-color: #2a6df4;
+                }
+
+                #showLogin:hover {
+                    color: #930026;
+                }
+            </style>
+
+
         </form>
 
     </div>
