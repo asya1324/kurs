@@ -3,12 +3,13 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: "Poppins", sans-serif;
-  background-color: #ffffff;
+  background-color: #fafafa;
   color: #222;
   display: flex;
   flex-direction: column;
 }
 
+/* ---------- Navbar ---------- */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -68,40 +69,124 @@ body {
   background-color: #930026;
 }
 
-/* ---------- Tests Section ---------- */
+/* ---------- Tests Container ---------- */
 .tests-container {
   flex: 1;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 80px 60px;
+  padding: 60px 60px 80px;
   width: 100%;
 }
 
+/* ---------- Tests Header ---------- */
 .tests-header {
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: 50px;
 }
 
 .tests-header h1 {
   font-size: 48px;
   font-weight: 800;
   color: #111;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
-.tests-header p {
-  font-size: 18px;
-  line-height: 1.6;
-  color: #444;
-  max-width: 700px;
-  margin: 0 auto;
+.create-btn {
+  display: inline-block;
+  font-size: 16px;
+  padding: 12px 28px;
+  background-color: #b40030;
+  color: white;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+  box-shadow: 0 2px 8px rgba(180, 0, 48, 0.2);
 }
 
+.create-btn:hover {
+  background-color: #930026;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(180, 0, 48, 0.3);
+}
+
+/* ---------- Tests Grid ---------- */
 .tests-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 30px;
   margin-top: 40px;
+}
+
+/* ---------- Test Card ---------- */
+.test-card {
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  transition: 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.test-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #b40030, #e91e63);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s;
+}
+
+.test-card:hover::before {
+  transform: scaleX(1);
+}
+
+.test-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: #b40030;
+}
+
+/* ---------- Test Link ---------- */
+.test-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 30px;
+}
+
+.test-card h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 12px 0;
+  transition: 0.2s;
+}
+
+.test-card:hover h2 {
+  color: #b40030;
+}
+
+.test-card p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #666;
+  margin: 0 0 16px 0;
+}
+
+.test-link .q-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: #b40030;
+  background-color: #fff5f7;
+  padding: 6px 12px;
+  border-radius: 6px;
+  display: inline-block;
 }
 
 /* ---------- Footer ---------- */
@@ -115,18 +200,14 @@ body {
   margin-top: auto;
 }
 
-/* Responsive */
+/* ---------- Responsive ---------- */
 @media (max-width: 768px) {
   .tests-container {
-    padding: 40px 30px;
+    padding: 40px 30px 60px;
   }
 
   .tests-header h1 {
     font-size: 36px;
-  }
-
-  .tests-header p {
-    font-size: 16px;
   }
 
   .navbar {
@@ -135,5 +216,13 @@ body {
 
   .tests-grid {
     grid-template-columns: 1fr;
+  }
+
+  .test-link {
+    padding: 24px;
+  }
+
+  .test-card h2 {
+    font-size: 20px;
   }
 }

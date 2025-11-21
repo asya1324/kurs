@@ -271,3 +271,26 @@ button[type="submit"]:hover {
     padding: 10px 24px;
   }
 }
+/* ---------- Code Formatting ---------- */
+.question-text,
+form > p {
+  white-space: pre-wrap;
+  font-family: "Poppins", sans-serif;
+}
+
+.question-text code,
+form > p code,
+label code {
+  display: block;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 10px 0;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  white-space: pre;
+  overflow-x: auto;
+}

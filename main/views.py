@@ -15,9 +15,9 @@ def login(request):
 def home(request):
     return render(request, 'home.html')
 
-
 def tests(request):
-    return render(request, "tests.html")
+    tests = Test.objects.all()
+    return render(request, "tests.html", {"tests": tests})
 
 
 def test(request):

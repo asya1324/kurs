@@ -1,14 +1,15 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Itestoria – Tests</title>
+    <title>All Tests – Itestoria</title>
+
     <link rel="stylesheet" href="{% static 'css/tests.css' %}">
 </head>
+
 <body>
-    <!-- ---------- Navbar ---------- -->
     <header class="navbar">
         <div class="brand">
             Itestoria<span class="dot"></span>
@@ -20,25 +21,37 @@
         </nav>
     </header>
 
-    <!-- ---------- Tests Section ---------- -->
     <main class="tests-container">
+
+        <!-- Header + Create Button -->
         <div class="tests-header">
-            <h1>Tests</h1>
-            <p>
-                This page contains all available tests. Create, explore, and complete tests 
-                to track your learning progress and improve your skills.
-            </p>
+            <h1>All Tests</h1>
+            <a href="/tests/create/" class="create-btn">+ Create test</a>
         </div>
 
-        <!-- You can add test cards here later -->
+        <!-- Tests Grid -->
         <div class="tests-grid">
-            <!-- Test cards will go here -->
+
+            {% for test in tests %}
+            <div class="test-card">
+                <a href="{% url 'test_detail' test.id %}" class="test-link">
+                    <h2>{{ test.title }}</h2>
+                    <p>{{ test.description }}</p>
+                    <span class="q-count">
+                        {{ test.questions.count }} questions
+                    </span>
+                </a>
+            </div>
+            {% endfor %}
+
         </div>
     </main>
 
-    <!-- ---------- Footer ---------- -->
     <footer class="footer">
         © 2025 Itestoria. All rights reserved.
     </footer>
+
 </body>
 </html>
+
+
