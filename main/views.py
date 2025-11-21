@@ -3,6 +3,8 @@ from .forms import UserRegistrationForm
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
 from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
+from .models import Test, Question, Choice
 
 # Create your views here.
 
@@ -46,4 +48,37 @@ def simple_login(request):
             return HttpResponse("Невірний логін або пароль")
 
     return HttpResponse("Invalid request")
+
+def test_detail(request, id):
+    test = get_object_or_404(Test, id=id)
+
+    score = None
+    total = test.questions.count()
+
+    if request.method == "POST":
+        score = 0
+
+        for q in test.questions.all():
+            field = f"q{q.id}"
+            chosen_id = request.POST.get(field)
+
+            if chosen_id:
+                chosen = Choice.objects.get(id=chosen_id)
+                if chosen.is_correct:
+                    score += 1
+
+    return render(
+        request,
+        "test_take.html",
+        {
+            "test": test,
+            "score": score,  
+            "total": total,
+        }
+    )
+
+
+
+
+
 

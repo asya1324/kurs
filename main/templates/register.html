@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial scale=1.0">
     <link rel="stylesheet" href="{% static 'css/register.css' %}">
-
     <title>Sign up</title>
 </head>
 
@@ -16,14 +15,17 @@
             <span class="name">Itestoria</span>
             <span class="dot"></span>
         </div>
+
         <h1>Sign up</h1>
-        <form>
+
+        <form method="POST" action="{% url 'register' %}">
+            {% csrf_token %}
             <div class="input-group">
                 <label for="firstname-input">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
                         fill="#ffffff">
                         <path
-                            d="M360-120v-200q-62-5-121.5-14T120-360l20-80q83 23 168 31.5t172 8.5q86 0 171-8.5T820-440l20 80q-60 17-119.5 26T600-320v200H360Zm120-320q-34 0-57-23t-23-57q0-33 23-56.5t57-23.5q33 0 56.5 23.5T560-520q0 34-23.5 57T480-440ZM180-560q-26 0-43-17t-17-43q0-25 17-42.5t43-17.5q25 0 42.5 17.5T240-620q0 26-17.5 43T180-560Zm600 0q-26 0-43-17t-17-43q0-25 17-42.5t43-17.5q25 0 42.5 17.5T840-620q0 26-17.5 43T780-560ZM290-710q-26 0-43-17t-17-43q0-25 17-42.5t43-17.5q25 0 42.5 17.5T350-770q0 26-17.5 43T290-710Zm380 0q-26 0-43-17t-17-43q0-25 17-42.5t43-17.5q25 0 42.5 17.5T730-770q0 26-17.5 43T670-710Zm-190-50q-26 0-43-17t-17-43q0-25 17-42.5t43-17.5q25 0 42.5 17.5T540-820q0 26-17.5 43T480-760Z" />
+                            d="M360-120v-200q-62-5-121.5-14T120-360l20-80q83 23 168 31.5t172 8.5q86 0 171-8.5T820-440l20 80q-60 17-119.5 26T600-320v200H360Zm120-320q-34 0-57-23t-23-57q0-33 23-56.5t57-23.5q33 0 56.5 23.5T560-520q0 34-23.5 57T480-440ZM180-560q-26 0-43-17t-17-43q0-25 17-42.5t43-17.5q25 0 42.5 17.5T240-620q0 26-17.5 43T180-560Zm600 0q-26 0-43-17t-17-43q0-25 17-42.5t43-17.5q25 0 42.5 17.5T840-620q0 26-17.5 43T780-560Z" />
                     </svg>
                 </label>
                 <input required type="text" name="firstname" id="firstname-input" placeholder="First name">
@@ -63,43 +65,45 @@
                     placeholder="Repeat password">
             </div>
 
+            <button type="submit" class="form-btn">Sign up</button>
+
             <p style="margin-top: 20px; text-align: center;">
                 Already have an account?
                 <button type="button" id="showLogin" style="
-            background: none;
-            border: none;
-            color: #b40030;
-            font-weight: 600;
-            cursor: pointer;
-            margin-left: 6px;
-            ">Log in</button>
+                    background: none;
+                    border: none;
+                    color: #b40030;
+                    font-weight: 600;
+                    cursor: pointer;
+                    margin-left: 6px;
+                ">Log in</button>
             </p>
 
             <div id="loginForm" style="display: none; text-align: center; margin-top: 15px;">
                 <form action="{% url 'login' %}" method="post" style="display: inline-block; text-align: left;">
                     {% csrf_token %}
                     <input type="text" name="username" placeholder="Username" required style="display: block; width: 250px; padding: 10px 12px; margin-bottom: 10px;
-             border: 2px solid transparent; border-radius: 8px;
-             background: #fff; color: #000; font-size: 15px; outline: none;
-             transition: 0.2s;">
+                        border: 2px solid transparent; border-radius: 8px;
+                        background: #fff; color: #000; font-size: 15px; outline: none;
+                        transition: 0.2s;">
 
                     <input type="password" name="password" placeholder="Password" required style="display: block; width: 250px; padding: 10px 12px; margin-bottom: 10px;
-             border: 2px solid transparent; border-radius: 8px;
-             background: #fff; color: #000; font-size: 15px; outline: none;
-             transition: 0.2s;">
+                        border: 2px solid transparent; border-radius: 8px;
+                        background: #fff; color: #000; font-size: 15px; outline: none;
+                        transition: 0.2s;">
 
                     <button type="submit" style="
-                display: block;
-                width: 100%;
-                background: #b40030;
-                color: #fff;
-                border: none;
-                border-radius: 8px;
-                padding: 10px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: 0.25s;
-                ">Sign in</button>
+                        display: block;
+                        width: 100%;
+                        background: #b40030;
+                        color: #fff;
+                        border: none;
+                        border-radius: 8px;
+                        padding: 10px;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: 0.25s;
+                    ">Sign in</button>
                 </form>
             </div>
 
@@ -107,6 +111,13 @@
                 document.getElementById("showLogin").addEventListener("click", () => {
                     const form = document.getElementById("loginForm");
                     form.style.display = form.style.display === "none" ? "block" : "none";
+                });
+
+                // 🔹 після успішної реєстрації перекидає на home
+                document.querySelector('.form-btn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    document.querySelector('form').submit();
+                    window.location.href = "{% url 'home' %}";
                 });
             </script>
 
@@ -122,11 +133,28 @@
                 #showLogin:hover {
                     color: #930026;
                 }
+
+                .form-btn {
+                    background-color: #b40030;
+                    color: #fff;
+                    border: none;
+                    padding: 12px 28px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    transition: 0.25s;
+                    display: block;
+                    margin: 25px auto;
+                    width: 100%;
+                    max-width: 200px;
+                }
+
+                .form-btn:hover {
+                    background-color: #930026;
+                }
             </style>
-
-
         </form>
-
     </div>
 </body>
 

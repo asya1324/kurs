@@ -1,0 +1,273 @@
+/* ---------- Base ---------- */
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  background-color: #fafafa;
+  color: #222;
+}
+
+/* ---------- Navbar ---------- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 60px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+}
+
+.brand .dot {
+  width: 8px;
+  height: 8px;
+  background-color: #b40030;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #222;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.nav-links a:hover {
+  color: #b40030;
+}
+
+.nav-links .btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  background-color: #b40030;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.nav-links .btn:hover {
+  background-color: #930026;
+}
+
+/* ---------- Test Container ---------- */
+.test-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* ---------- Center content ---------- */
+form, h1, p {
+  text-align: center;
+}
+
+/* ---------- Title ---------- */
+h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-top: 60px;
+  margin-bottom: 15px;
+}
+
+/* ---------- Description ---------- */
+h1 + p {
+  font-size: 18px;
+  color: #555;
+  max-width: 700px;
+  margin: 0 auto 50px auto;
+}
+
+/* ---------- Form Container ---------- */
+form {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+/* ---------- Question Block ---------- */
+.question-block {
+  margin-bottom: 30px;
+}
+
+/* ---------- Question Text ---------- */
+.question-text b,
+form p b {
+  display: block;
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #111;
+}
+
+/* ---------- Answer Options ---------- */
+.choice-option,
+label {
+  font-size: 18px;
+  display: block;
+  margin-bottom: 8px;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.choice-option:hover,
+label:hover {
+  background-color: #f5f5f5;
+}
+
+input[type="radio"] {
+  margin-right: 8px;
+  accent-color: #b40030;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+/* ---------- Hide br tags ---------- */
+br {
+  display: none;
+}
+
+/* ---------- Question Divider ---------- */
+hr {
+  margin: 35px 0;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+/* ---------- Submit Button ---------- */
+.submit-btn,
+button[type="submit"] {
+  display: block;
+  margin: 40px auto;
+  padding: 12px 28px;
+  font-size: 20px;
+  background-color: #b40030;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.submit-btn:hover,
+button[type="submit"]:hover {
+  background-color: #930026;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(180, 0, 48, 0.3);
+}
+
+/* ---------- Result Box ---------- */
+.result-box {
+  max-width: 600px;
+  margin: 60px auto;
+  text-align: center;
+  background-color: #fff;
+  padding: 60px 40px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #eee;
+}
+
+.result-box h2 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 30px;
+}
+
+/* ---------- Retry Button ---------- */
+.retry-btn {
+  font-size: 20px;
+  display: inline-block;
+  margin-top: 20px;
+  background-color: #b40030;
+  color: white;
+  padding: 12px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+  font-family: "Poppins", sans-serif;
+}
+
+.retry-btn:hover {
+  background-color: #930026;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(180, 0, 48, 0.3);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 18px 30px;
+  }
+
+  .test-container {
+    padding: 20px 15px 60px;
+  }
+
+  h1 {
+    font-size: 36px;
+    margin-top: 40px;
+  }
+
+  h1 + p {
+    font-size: 16px;
+  }
+
+  form {
+    padding: 0 20px;
+  }
+
+  .question-text b,
+  form p b {
+    font-size: 18px;
+  }
+
+  .choice-option,
+  label {
+    font-size: 16px;
+    padding: 8px;
+  }
+
+  .submit-btn,
+  button[type="submit"] {
+    font-size: 18px;
+    padding: 10px 24px;
+  }
+
+  .result-box {
+    padding: 40px 30px;
+    margin: 40px auto;
+  }
+
+  .result-box h2 {
+    font-size: 26px;
+  }
+
+  .retry-btn {
+    font-size: 18px;
+    padding: 10px 24px;
+  }
+}

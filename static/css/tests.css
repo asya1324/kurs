@@ -1,0 +1,139 @@
+/* ---------- Base ---------- */
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  background-color: #ffffff;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 60px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+}
+
+.brand .dot {
+  width: 8px;
+  height: 8px;
+  background-color: #b40030;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #222;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.nav-links a:hover {
+  color: #b40030;
+}
+
+.nav-links .btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  background-color: #b40030;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.nav-links .btn:hover {
+  background-color: #930026;
+}
+
+/* ---------- Tests Section ---------- */
+.tests-container {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 60px;
+  width: 100%;
+}
+
+.tests-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.tests-header h1 {
+  font-size: 48px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 20px;
+}
+
+.tests-header p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #444;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.tests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  text-align: center;
+  padding: 20px 0;
+  border-top: 1px solid #eee;
+  color: #777;
+  font-size: 14px;
+  background-color: #fff;
+  margin-top: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tests-container {
+    padding: 40px 30px;
+  }
+
+  .tests-header h1 {
+    font-size: 36px;
+  }
+
+  .tests-header p {
+    font-size: 16px;
+  }
+
+  .navbar {
+    padding: 18px 30px;
+  }
+
+  .tests-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ test.title }}</title>
+    <link rel="stylesheet" href="{% static 'css/alltests.css' %}">
+
+</head>
+<body>
+
+<!-- ---------- Navbar ---------- -->
+<header class="navbar">
+    <div class="brand">
+        Itestoria<span class="dot"></span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'tests' %}">Tests</a>
+        <a href="{% url 'register' %}" class="btn">Sign up</a>
+    </nav>
+</header>
+
+<!-- ---------- Test Content ---------- -->
+<div class="test-container">
+
+    <h1>{{ test.title }}</h1>
+    <p>{{ test.description }}</p>
+
+    {% if score is None %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for q in test.questions.all %}
+
+                <div class="question-block">
+                    <p class="question-text"><b>{{ q.text }}</b></p>
+
+                    {% for c in q.choices.all %}
+                        <label class="choice-option">
+                            <input type="radio" name="q{{ q.id }}" value="{{ c.id }}">
+                            {{ c.text }}
+                        </label><br>
+                    {% endfor %}
+
+                    <hr>
+                </div>
+
+            {% endfor %}
+
+            <button class="submit-btn" type="submit">Submit</button>
+        </form>
+
+    {% else %}
+
+        <div class="result-box">
+            <h2>Your score: {{ score }} / {{ total }}</h2>
+
+            <a href="{% url 'test_detail' test.id %}" class="retry-btn">
+                Try again
+            </a>
+        </div>
+
+    {% endif %}
+</div>
+
+</body>
+</html>
+
+
+
