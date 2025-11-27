@@ -55,18 +55,55 @@ body {
   color: #b40030;
 }
 
-.nav-links .btn {
-  padding: 8px 16px;
+/* ---------- Buttons ---------- */
+.btn {
+  padding: 8px 18px;
   border-radius: 10px;
   background-color: #b40030;
-  color: #fff;
-  text-decoration: none;
+  color: #fff !important;
   font-weight: 600;
+  text-decoration: none;
   transition: 0.25s;
 }
 
-.nav-links .btn:hover {
+.btn:hover {
   background-color: #930026;
+}
+
+.btn.secondary {
+  background-color: #b40030;
+  color: #fff !important;
+  border: none;
+}
+
+.btn.secondary:hover {
+  background-color: #930026;
+}
+
+.small-btn {
+  padding: 6px 14px;
+  font-size: 14px;
+}
+
+/* ---------- Logout Button ---------- */
+.logout-btn {
+  background-color: #555;
+}
+
+.logout-btn:hover {
+  background-color: #333;
+}
+
+/* ---------- Profile Menu ---------- */
+.profile-menu {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.profile-name {
+  font-weight: 600;
+  color: #222;
 }
 
 /* ---------- Hero Section ---------- */
@@ -154,18 +191,23 @@ body {
     text-align: center;
     padding: 40px 30px;
   }
-  
+
   .hero-image {
     justify-content: center;
     margin-right: 0;
   }
-  
+
   .hero-image img {
     max-width: 100%;
   }
-  
+
   .navbar {
     padding: 18px 30px;
+  }
+
+  .profile-menu {
+    flex-direction: column;
+    gap: 8px;
   }
 }
 

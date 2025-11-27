@@ -7,16 +7,33 @@
     <title>Itestoria – Home</title>
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
 </head>
+
 <body>
+
     <!-- ---------- Navbar ---------- -->
     <header class="navbar">
         <div class="brand">
             Itestoria<span class="dot"></span>
         </div>
+
         <nav class="nav-links">
             <a href="{% url 'home' %}">Home</a>
             <a href="{% url 'tests' %}">Tests</a>
-            <a href="{% url 'register' %}" class="btn">Sign up</a>
+
+            {% if user.is_authenticated %}
+
+                <div class="profile-menu">
+                    <span class="profile-name">{{ user.username }}</span>
+                    <a href="{% url 'tests' %}" class="btn small-btn">My tests</a>
+                    <a href="{% url 'logout' %}" class="btn small-btn logout-btn">Logout</a>
+                </div>
+
+            {% else %}
+
+                <a href="{% url 'register' %}" class="btn">Sign up</a>
+                <a href="{% url 'register' %}" class="btn secondary same">Log in</a>
+
+            {% endif %}
         </nav>
     </header>
 
@@ -25,11 +42,12 @@
         <div class="hero-text">
             <h1>Welcome to <span>Itestoria</span></h1>
             <p>
-                A space where learning meets simplicity. Create your account, explore tests, 
+                A space where learning meets simplicity. Create your account, explore tests,
                 and track your growth — all in one place.
             </p>
             <a href="{% url 'tests' %}" class="main-btn">Start Testing</a>
         </div>
+
         <div class="hero-image">
             <img src="{% static 'css/home.jpg' %}" alt="">
         </div>
@@ -39,5 +57,7 @@
     <footer class="footer">
         © 2025 Itestoria. All rights reserved.
     </footer>
+
 </body>
 </html>
+

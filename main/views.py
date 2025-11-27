@@ -23,31 +23,68 @@ def tests(request):
 def test(request):
     return render(request, "test.html")
 
-def register(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            new_user = form.save(commit=False)
-            new_user.set_password(form.cleaned_data['password'])
-            new_user.save()
-            return render(request, 'register_done.html', {'new_user': new_user})
-    else:
-        form = UserRegistrationForm()
-    return render(request, 'register.html', {'form': form})
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.http import HttpResponse
 
+
+# ============ SIGN UP ============
+def register(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password1 = request.POST.get("password")
+        password2 = request.POST.get("password2")
+
+        # error: password mismatch
+        if password1 != password2:
+            return render(request, "register.html", {"error": "Passwords do not match"})
+
+        # error: username exists
+        if User.objects.filter(username=username).exists():
+            return render(request, "register.html", {"error": "Username already taken"})
+
+        # error: email exists
+        if User.objects.filter(email=email).exists():
+            return render(request, "register.html", {"error": "Email already in use"})
+
+        # create account
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password1
+        )
+
+        login(request, user)
+        return redirect("home")
+
+    return render(request, "register.html")
+
+
+# ============ LOGIN ============
 def simple_login(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
 
         user = authenticate(request, username=username, password=password)
+
         if user:
             login(request, user)
-            return redirect("/")  
+            return redirect("home")
         else:
-            return HttpResponse("Невірний логін або пароль")
+            # return login error inside same page
+            return render(request, "register.html", {"login_error": "Invalid username or password"})
 
     return HttpResponse("Invalid request")
+
+
+# ============ LOGOUT ============
+def simple_logout(request):
+    logout(request)
+    return redirect("home")
+
 
 def test_detail(request, id):
     test = get_object_or_404(Test, id=id)
@@ -78,6 +115,46 @@ def test_detail(request, id):
     )
 
 
+
+from django.shortcuts import render, redirect
+from .models import Test
+from django.contrib.auth.decorators import login_required
+
+def test_create(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        description = request.POST.get("description")
+
+        # створюємо тест
+        test = Test.objects.create(
+            title=title,
+            description=description,
+            author=request.user,
+            is_published=True
+        )
+
+        # ---- додаємо питання якщо введені (не обовʼязково) ----
+        qtext = request.POST.get("qtext")
+        opt1 = request.POST.get("opt1")
+        opt2 = request.POST.get("opt2")
+        opt3 = request.POST.get("opt3")
+        opt4 = request.POST.get("opt4")
+        correct = request.POST.get("correct")    # "0", "1", "2", "3"
+
+        if qtext and opt1 and opt2 and opt3 and opt4 and correct is not None:
+            q = Question.objects.create(test=test, text=qtext)
+
+            options = [opt1, opt2, opt3, opt4]
+            for idx, text in enumerate(options):
+                Choice.objects.create(
+                    question=q,
+                    text=text,
+                    is_correct=(idx == int(correct))
+                )
+
+        return redirect("tests")
+
+    return render(request, "tests_create.html")
 
 
 

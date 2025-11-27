@@ -329,6 +329,194 @@ for idx, (qtext, choices, correct) in enumerate(questions2, start=1):
         is_correct = (i in correct) if isinstance(correct, list) else (i == correct)
         Choice.objects.create(question=q, text=ctext, is_correct=is_correct)
 
+test3 = Test.objects.create(
+    title="Beginner HTML Test",
+    description="20 beginner-friendly HTML questions",
+    author=author,
+    is_published=True
+)
+
+questions3 = [
+
+    # 1
+    (
+        "What are HTML tags?",
+        [
+            "Keywords inside angle brackets that describe content and structure.",
+            "Python functions used to style output.",
+            "Commands executed by the browser’s CPU.",
+            "SQL statements for web pages."
+        ],
+        0
+    ),
+
+    # 2
+    (
+        "What’s the difference between HTML and HTML5?",
+        [
+            "HTML5 adds multimedia, semantic tags, <audio>, <video>, and new APIs.",
+            "There is no difference.",
+            "HTML5 removed <div> and <span>.",
+            "HTML is newer than HTML5."
+        ],
+        0
+    ),
+
+    # 3
+    (
+        "Which of the following is a correct basic HTML document structure?",
+        [
+            "<!DOCTYPE html>, <html>, <head>, <body>",
+            "<html>, <meta>, <div>",
+            "<html>, <canvas>, <script>",
+            "<doctype>, <style>, <footer>"
+        ],
+        0
+    ),
+
+    # 4
+    (
+        "What’s the difference between a tag and an element?",
+        [
+            "A tag = markup inside < >; an element = tag + content + attributes.",
+            "There is no difference.",
+            "A tag is only visible text.",
+            "An element is always a closing tag."
+        ],
+        0
+    ),
+
+    # 5
+    (
+        "Which tag is used for the largest heading?",
+        ["<h6>", "<heading>", "<h1>", "<title>"],
+        2
+    ),
+
+    # 6
+    (
+        "Which HTML tag is used to create a paragraph?",
+        ["<text>", "<para>", "<body>", "<p>"],
+        3
+    ),
+
+    # 7
+    (
+        "Which tag is used to insert an image?",
+        ["<img>", "<pic>", "<image>", "<src>"],
+        0
+    ),
+
+    # 8
+    (
+        "Which attribute is required for <img>?",
+        ["href", "src", "alt", "title"],
+        1
+    ),
+
+    # 9
+    (
+        "Which element contains metadata such as title and character encoding?",
+        ["<meta>", "<info>", "<head>", "<header>"],
+        2
+    ),
+
+    # 10
+    (
+        "What does <!DOCTYPE html> do?",
+        [
+            "Marks the beginning of the CSS section.",
+            "Tells the browser to render in HTML5 mode.",
+            "Starts the JavaScript engine.",
+            "Closes the document."
+        ],
+        1
+    ),
+
+    # 11
+    (
+        "Which HTML tag is used for clickable links?",
+        ["<link>", "<url>", "<a>", "<href>"],
+        2
+    ),
+
+    # 12
+    (
+        "Which tag is used for unordered lists?",
+        ["<ol>", "<ul>", "<li>", "<list>"],
+        1
+    ),
+
+    # 13
+    (
+        "Which HTML element is semantic?",
+        ["<div>", "<header>", "<span>", "<b>"],
+        1
+    ),
+
+    # 14
+    (
+        "Which input type was introduced in HTML5?",
+        ["text", "password", "email", "radio"],
+        2
+    ),
+
+    # 15
+    (
+        "What is the correct tag for inserting a line break?",
+        ["<break>", "<lb>", "<br>", "<line>"],
+        2
+    ),
+
+    # 16
+    (
+        "What does the <title> tag control?",
+        [
+            "The visible headline on the page.",
+            "Text shown in the browser tab.",
+            "The background color of the page.",
+            "The footer text."
+        ],
+        1
+    ),
+
+    # 17
+    (
+        "Which HTML element is used to group block-level content?",
+        ["<div>", "<span>", "<section>", "<group>"],
+        0
+    ),
+
+    # 18
+    (
+        "Which HTML tag is used to display code snippets?",
+        ["<script>", "<pre>", "<code>", "<cmd>"],
+        2
+    ),
+
+    # 19
+    (
+        "Which API was introduced in HTML5?",
+        ["Web Storage", "Flash API", "JavaFX API", "Silverlight API"],
+        0
+    ),
+
+    # 20
+    (
+        "Which tag is used to embed audio in HTML5?",
+        ["<sound>", "<audio>", "<music>", "<mp3>"],
+        1
+    ),
+]
+
+
+for idx, (qtext, choices, correct) in enumerate(questions3, start=1):
+    qtype = "multi" if isinstance(correct, list) else "single"
+    q = Question.objects.create(test=test3, text=qtext, qtype=qtype)
+
+    for i, ctext in enumerate(choices):
+        is_correct = (i in correct) if isinstance(correct, list) else (i == correct)
+        Choice.objects.create(question=q, text=ctext, is_correct=is_correct)
 
 
 
