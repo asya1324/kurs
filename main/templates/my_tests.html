@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>My Results – Itestoria</title>
+    <link rel="stylesheet" href="{% static 'css/tests.css' %}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+    <div class="brand">
+        Itestoria<span class="dot"></span>
+    </div>
+
+    <nav class="nav-links">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'tests' %}">Tests</a>
+
+        {% if user.is_authenticated %}
+        <div class="profile-menu">
+            <span class="profile-name">{{ user.username }}</span>
+
+            <!-- ГОЛОВНЕ: правильна сторінка -->
+            <a href="{% url 'my_tests' %}" class="btn small-btn">My tests</a>
+
+            <a href="{% url 'logout' %}" class="btn small-btn logout-btn">Logout</a>
+        </div>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn secondary">Log in</a>
+            <a href="{% url 'register' %}" class="btn">Sign up</a>
+        {% endif %}
+    </nav>
+</header>
+
+
+<!-- RESULTS CONTENT -->
+<main class="tests-container">
+
+    <div class="tests-header">
+        <h1>My Test Results</h1>
+    </div>
+
+    {% if results %}
+        <div class="tests-grid">
+            {% for r in results %}
+            <div class="test-card">
+                <h2>{{ r.test.title }}</h2>
+                <p>Score: <b>{{ r.score }}/{{ r.total }}</b></p>
+                <p class="date">{{ r.created_at|date:"d M Y, H:i" }}</p>
+
+                <a href="{% url 'test_detail' r.test.id %}" class="test-link">Try again</a>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You haven't passed any tests yet.</p>
+    {% endif %}
+
+</main>
+
+
+<footer class="footer">
+    © 2025 Itestoria. All rights reserved.
+</footer>
+
+</body>
+</html>
+
+

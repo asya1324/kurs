@@ -3,71 +3,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ test.title }}</title>
-    <link rel="stylesheet" href="{% static 'css/alltests.css' %}">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ test.title }} – Itestoria</title>
+    <link rel="stylesheet" href="{% static 'css/tests.css' %}">
 </head>
 <body>
+    <!-- ---------- Navbar ---------- -->
+    <header class="navbar">
+        <div class="brand">
+            Itestoria<span class="dot"></span>
+        </div>
+        <nav class="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'tests' %}">Tests</a>
+            {% if user.is_authenticated %}
+            <div class="profile-menu">
+                <span class="profile-name">{{ user.username }}</span>
+                <a href="{% url 'my_tests' %}" class="btn small-btn">My tests</a>
+                <a href="{% url 'logout' %}" class="btn small-btn logout-btn">Logout</a>
+            </div>
+            {% else %}
+            <a href="{% url 'register' %}" class="btn">Sign up</a>
+            <a href="{% url 'login' %}" class="btn secondary">Log in</a>
+            {% endif %}
+        </nav>
+    </header>
 
-<!-- ---------- Navbar ---------- -->
-<header class="navbar">
-    <div class="brand">
-        Itestoria<span class="dot"></span>
-    </div>
-
-    <nav class="nav-links">
-        <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'tests' %}">Tests</a>
-        <a href="{% url 'register' %}" class="btn">Sign up</a>
-    </nav>
-</header>
-
-<!-- ---------- Test Content ---------- -->
-<div class="test-container">
-
-    <h1>{{ test.title }}</h1>
-    <p>{{ test.description }}</p>
-
-    {% if score is None %}
-
-        <form method="post">
-            {% csrf_token %}
-
-            {% for q in test.questions.all %}
-
-                <div class="question-block">
-                    <p class="question-text"><b>{{ q.text }}</b></p>
-
-                    {% for c in q.choices.all %}
-                        <label class="choice-option">
-                            <input type="radio" name="q{{ q.id }}" value="{{ c.id }}">
-                            {{ c.text }}
-                        </label><br>
-                    {% endfor %}
-
-                    <hr>
-                </div>
-
-            {% endfor %}
-
-            <button class="submit-btn" type="submit">Submit</button>
-        </form>
-
-    {% else %}
-
-        <div class="result-box">
-            <h2>Your score: {{ score }} / {{ total }}</h2>
-
-            <a href="{% url 'test_detail' test.id %}" class="retry-btn">
-                Try again
-            </a>
+    <!-- ---------- Test Content ---------- -->
+    <main class="test-container">
+        <div class="test-header">
+            <h1>{{ test.title }}</h1>
+            <p class="test-description">{{ test.description }}</p>
         </div>
 
-    {% endif %}
-</div>
+        {% if score is None %}
+        <form method="post" class="test-form">
+            {% csrf_token %}
+            {% for q in test.questions.all %}
+            <div class="question-block">
+                <p class="question-text"><strong>{{ forloop.counter }}. {{ q.text }}</strong></p>
+                <div class="choices-container">
+                    {% for c in q.choices.all %}
+                    <label class="choice-option">
+                        <input type="radio" name="q{{ q.id }}" value="{{ c.id }}" required>
+                        <span>{{ c.text }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+            <button class="submit-btn" type="submit">Submit Test</button>
+        </form>
+        {% else %}
+        <div class="result-box">
+            <h2>Your Score: {{ score }} / {{ total }}</h2>
+            <p class="result-percentage">{{ score|floatformat:0 }}%</p>
+            <a href="{% url 'test_detail' test.id %}" class="retry-btn">Try Again</a>
+        </div>
+        {% endif %}
+    </main>
 
+    <!-- ---------- Footer ---------- -->
+    <footer class="footer">
+        © 2025 Itestoria. All rights reserved.
+    </footer>
 </body>
 </html>
+
 
 
 

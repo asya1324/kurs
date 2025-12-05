@@ -44,14 +44,14 @@ body {
   gap: 25px;
 }
 
-.nav-links a {
+.nav-links > a {
   text-decoration: none;
   color: #222;
   font-weight: 500;
   transition: 0.2s;
 }
 
-.nav-links a:hover {
+.nav-links > a:hover {
   color: #b40030;
 }
 
@@ -64,6 +64,7 @@ body {
   font-weight: 600;
   text-decoration: none;
   transition: 0.25s;
+  display: inline-block;
 }
 
 .btn:hover {
@@ -71,39 +72,50 @@ body {
 }
 
 .btn.secondary {
-  background-color: #b40030;
+  background-color: #555;
   color: #fff !important;
-  border: none;
 }
 
 .btn.secondary:hover {
-  background-color: #930026;
+  background-color: #333;
 }
 
 .small-btn {
-  padding: 6px 14px;
+  padding: 7px 16px;
   font-size: 14px;
-}
-
-/* ---------- Logout Button ---------- */
-.logout-btn {
-  background-color: #555;
-}
-
-.logout-btn:hover {
-  background-color: #333;
 }
 
 /* ---------- Profile Menu ---------- */
 .profile-menu {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
+  padding: 8px 16px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  border: 1px solid #eee;
 }
 
 .profile-name {
   font-weight: 600;
-  color: #222;
+  color: #111;
+  font-size: 15px;
+  padding-right: 8px;
+  border-right: 1px solid #ddd;
+}
+
+.profile-menu .btn {
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+/* ---------- Logout Button ---------- */
+.logout-btn {
+  background-color: #555 !important;
+}
+
+.logout-btn:hover {
+  background-color: #333 !important;
 }
 
 /* ---------- Hero Section ---------- */
@@ -205,9 +217,21 @@ body {
     padding: 18px 30px;
   }
 
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
   .profile-menu {
     flex-direction: column;
     gap: 8px;
+    padding: 10px;
+  }
+
+  .profile-name {
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+    padding-right: 0;
+    padding-bottom: 8px;
   }
 }
-

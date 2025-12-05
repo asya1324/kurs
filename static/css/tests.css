@@ -44,149 +44,240 @@ body {
   gap: 25px;
 }
 
-.nav-links a {
+.nav-links > a {
   text-decoration: none;
   color: #222;
   font-weight: 500;
   transition: 0.2s;
 }
 
-.nav-links a:hover {
+.nav-links > a:hover {
   color: #b40030;
 }
 
-.nav-links .btn {
-  padding: 8px 16px;
+/* ---------- Buttons ---------- */
+.btn {
+  padding: 8px 18px;
   border-radius: 10px;
   background-color: #b40030;
-  color: #fff;
-  text-decoration: none;
+  color: #fff !important;
   font-weight: 600;
+  text-decoration: none;
   transition: 0.25s;
+  display: inline-block;
 }
 
-.nav-links .btn:hover {
+.btn:hover {
   background-color: #930026;
 }
 
-/* ---------- Tests Container ---------- */
-.tests-container {
+.btn.secondary {
+  background-color: #555;
+}
+
+.btn.secondary:hover {
+  background-color: #333;
+}
+
+/* ---------- Profile Menu ---------- */
+.profile-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  border: 1px solid #eee;
+}
+
+.profile-name {
+  font-weight: 600;
+  color: #111;
+  font-size: 15px;
+  padding-right: 8px;
+  border-right: 1px solid #ddd;
+}
+
+.profile-menu .btn {
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+.logout-btn {
+  background-color: #555 !important;
+}
+
+.logout-btn:hover {
+  background-color: #333 !important;
+}
+
+/* ---------- Test Container ---------- */
+.test-container {
   flex: 1;
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 60px 60px 80px;
+  padding: 60px 30px 80px;
   width: 100%;
 }
 
-/* ---------- Tests Header ---------- */
-.tests-header {
+/* ---------- Test Header ---------- */
+.test-header {
   text-align: center;
   margin-bottom: 50px;
 }
 
-.tests-header h1 {
-  font-size: 48px;
+.test-header h1 {
+  font-size: 42px;
   font-weight: 800;
   color: #111;
-  margin-bottom: 30px;
+  margin-bottom: 12px;
 }
 
-.create-btn {
-  display: inline-block;
+.test-description {
   font-size: 16px;
-  padding: 12px 28px;
-  background-color: #b40030;
-  color: white;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: 0.25s;
-  box-shadow: 0 2px 8px rgba(180, 0, 48, 0.2);
+  color: #666;
+  line-height: 1.6;
 }
 
-.create-btn:hover {
+/* ---------- Test Form ---------- */
+.test-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* ---------- Question Block ---------- */
+.question-block {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: 0.2s;
+}
+
+.question-block:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.question-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+/* ---------- Choices Container ---------- */
+.choices-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.choice-option {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  background-color: #fafafa;
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 15px;
+  color: #333;
+}
+
+.choice-option:hover {
+  background-color: #f5f5f5;
+  border-color: #b40030;
+}
+
+.choice-option input[type="radio"] {
+  margin-right: 12px;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  accent-color: #b40030;
+  flex-shrink: 0;
+}
+
+.choice-option:has(input[type="radio"]:checked) {
+  background-color: #fff5f7;
+  border-color: #b40030;
+}
+
+.choice-option:has(input[type="radio"]:checked) span {
+  font-weight: 600;
+  color: #b40030;
+}
+
+/* ---------- Submit Button ---------- */
+.submit-btn {
+  background-color: #b40030;
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.25s;
+  font-family: "Poppins", sans-serif;
+  align-self: center;
+  margin-top: 20px;
+}
+
+.submit-btn:hover {
   background-color: #930026;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(180, 0, 48, 0.3);
 }
 
-/* ---------- Tests Grid ---------- */
-.tests-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 30px;
-  margin-top: 40px;
+.submit-btn:active {
+  transform: translateY(0);
 }
 
-/* ---------- Test Card ---------- */
-.test-card {
+/* ---------- Result Box ---------- */
+.result-box {
   background-color: #fff;
+  padding: 60px 40px;
   border-radius: 12px;
-  border: 1px solid #eee;
-  transition: 0.3s;
+  text-align: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  position: relative;
-  overflow: hidden;
+  border: 1px solid #eee;
 }
 
-.test-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: linear-gradient(90deg, #b40030, #e91e63);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.3s;
-}
-
-.test-card:hover::before {
-  transform: scaleX(1);
-}
-
-.test-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  border-color: #b40030;
-}
-
-/* ---------- Test Link ---------- */
-.test-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  padding: 30px;
-}
-
-.test-card h2 {
-  font-size: 24px;
-  font-weight: 700;
+.result-box h2 {
+  font-size: 36px;
+  font-weight: 800;
   color: #111;
-  margin: 0 0 12px 0;
-  transition: 0.2s;
+  margin-bottom: 20px;
 }
 
-.test-card:hover h2 {
-  color: #b40030;
-}
-
-.test-card p {
-  font-size: 15px;
-  line-height: 1.6;
-  color: #666;
-  margin: 0 0 16px 0;
-}
-
-.test-link .q-count {
-  font-size: 13px;
+.result-percentage {
+  font-size: 24px;
   font-weight: 600;
   color: #b40030;
-  background-color: #fff5f7;
-  padding: 6px 12px;
-  border-radius: 6px;
+  margin-bottom: 30px;
+}
+
+.retry-btn {
   display: inline-block;
+  background-color: #b40030;
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.retry-btn:hover {
+  background-color: #930026;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(180, 0, 48, 0.3);
 }
 
 /* ---------- Footer ---------- */
@@ -202,27 +293,192 @@ body {
 
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
-  .tests-container {
-    padding: 40px 30px 60px;
-  }
-
-  .tests-header h1 {
-    font-size: 36px;
-  }
-
   .navbar {
     padding: 18px 30px;
   }
 
-  .tests-grid {
-    grid-template-columns: 1fr;
+  .test-container {
+    padding: 40px 20px 60px;
   }
 
-  .test-link {
-    padding: 24px;
+  .test-header h1 {
+    font-size: 32px;
   }
 
+  .question-block {
+    padding: 24px 20px;
+  }
+
+  .question-text {
+    font-size: 16px;
+  }
+
+  .choice-option {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .submit-btn {
+    width: 100%;
+  }
+
+  .result-box {
+    padding: 40px 20px;
+  }
+
+  .result-box h2 {
+    font-size: 28px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .profile-menu {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .profile-name {
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+    padding-right: 0;
+    padding-bottom: 8px;
+  }
+}
+
+.tests-container {
+    max-width: 900px;
+    margin: 40px auto; 
+    padding-left: 10px;
+}
+
+/* ---------- Results Specific Styles ---------- */
+
+/* Results container adjustments */
+.tests-container .tests-header h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.tests-container .tests-header p {
+  text-align: center;
+  color: #666;
+  font-size: 16px;
+  margin-top: 0;
+}
+
+/* Empty state message */
+.tests-container > p {
+  text-align: center;
+  font-size: 18px;
+  color: #666;
+  padding: 60px 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Result card modifications */
+.test-card h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 16px 0;
+  transition: 0.2s;
+}
+
+.test-card:hover h2 {
+  color: #b40030;
+}
+
+.test-card p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #666;
+  margin: 0 0 12px 0;
+}
+
+.test-card p b {
+  color: #111;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* Date styling */
+.test-card .date {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.test-card .date::before {
+  content: '🕒';
+  font-size: 14px;
+}
+
+/* Try again link */
+.test-card .test-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #b40030;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  transition: 0.2s;
+  margin-top: 8px;
+}
+
+.test-card .test-link:hover {
+  color: #930026;
+  gap: 12px;
+}
+
+.test-card .test-link::after {
+  content: '→';
+  font-size: 16px;
+  transition: 0.2s;
+}
+
+/* Score badge enhancement */
+.test-card p:first-of-type {
+  background-color: #f8f8f8;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-left: 4px solid #b40030;
+  margin-bottom: 16px;
+}
+
+/* Card layout improvements for results */
+.tests-grid .test-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+}
+
+.tests-grid .test-card .test-link {
+  margin-top: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
   .test-card h2 {
     font-size: 20px;
+  }
+
+  .test-card p b {
+    font-size: 16px;
+  }
+
+  .tests-grid .test-card {
+    min-height: auto;
   }
 }

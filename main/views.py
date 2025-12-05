@@ -1,35 +1,24 @@
-from django.shortcuts import render, redirect
-from .forms import UserRegistrationForm
-from django.contrib.auth import authenticate, login
-from django.shortcuts import redirect
-from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import authenticate, login as django_login, logout
+from django.contrib.auth.models import User
 from .models import Test, Question, Choice
+from .models import TestResult
 
-# Create your views here.
 
-
-def login(request):
-    return render(request, "login.html")
+# ===================== HOME =====================
 
 def home(request):
-    return render(request, 'home.html')
-
-def tests(request):
-    tests = Test.objects.all()
-    return render(request, "tests.html", {"tests": tests})
+    return render(request, "home.html")
 
 
-def test(request):
-    return render(request, "test.html")
+# ===================== LOGIN PAGE =====================
 
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
-from django.http import HttpResponse
+def login_page(request):
+    return render(request, "login.html")
 
 
-# ============ SIGN UP ============
+# ===================== REGISTER =====================
+
 def register(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -37,32 +26,28 @@ def register(request):
         password1 = request.POST.get("password")
         password2 = request.POST.get("password2")
 
-        # error: password mismatch
         if password1 != password2:
             return render(request, "register.html", {"error": "Passwords do not match"})
 
-        # error: username exists
         if User.objects.filter(username=username).exists():
             return render(request, "register.html", {"error": "Username already taken"})
 
-        # error: email exists
         if User.objects.filter(email=email).exists():
             return render(request, "register.html", {"error": "Email already in use"})
 
-        # create account
         user = User.objects.create_user(
             username=username,
             email=email,
             password=password1
         )
-
-        login(request, user)
+        django_login(request, user)
         return redirect("home")
 
     return render(request, "register.html")
 
 
-# ============ LOGIN ============
+# ===================== LOGIN LOGIC =====================
+
 def simple_login(request):
     if request.method == "POST":
         username = request.POST.get("username")
@@ -71,30 +56,52 @@ def simple_login(request):
         user = authenticate(request, username=username, password=password)
 
         if user:
-            login(request, user)
+            django_login(request, user)
             return redirect("home")
         else:
-            # return login error inside same page
-            return render(request, "register.html", {"login_error": "Invalid username or password"})
+            return render(request, "login.html", {"error": "Invalid username or password"})
 
-    return HttpResponse("Invalid request")
+    # GET → просто повертаємо сторінку логіну
+    return render(request, "login.html")
 
 
-# ============ LOGOUT ============
+# ===================== LOGOUT =====================
+
 def simple_logout(request):
     logout(request)
     return redirect("home")
 
 
+# ===================== VIEW ALL TESTS =====================
+
+def tests(request):
+    tests = Test.objects.all()
+    return render(request, "tests.html", {"tests": tests})
+
+
+# ===================== VIEW ONLY USER TESTS =====================
+
+def my_tests(request):
+    if not request.user.is_authenticated:
+        return render(request, "login_required.html")
+
+    tests = Test.objects.filter(author=request.user)
+    return render(request, "my_tests.html", {"tests": tests})
+
+
+# ===================== TAKE TEST (DETAIL + ANSWER FORM) =====================
+
 def test_detail(request, id):
+    if not request.user.is_authenticated:
+        return render(request, "login_required.html")
+
     test = get_object_or_404(Test, id=id)
 
-    score = None
     total = test.questions.count()
+    score = None  # значення за замовчуванням
 
     if request.method == "POST":
         score = 0
-
         for q in test.questions.all():
             field = f"q{q.id}"
             chosen_id = request.POST.get(field)
@@ -104,28 +111,38 @@ def test_detail(request, id):
                 if chosen.is_correct:
                     score += 1
 
+        # ЗБЕРІГАЄМО РЕЗУЛЬТАТ
+        TestResult.objects.create(
+            user=request.user,
+            test=test,
+            score=score,
+            total=total
+        )
+
+        return render(
+            request,
+            "test_take.html",
+            {"test": test, "score": score, "total": total}
+        )
+
+    # GET запит (просто відкрити тест)
     return render(
         request,
         "test_take.html",
-        {
-            "test": test,
-            "score": score,  
-            "total": total,
-        }
+        {"test": test, "score": score, "total": total}
     )
 
 
-
-from django.shortcuts import render, redirect
-from .models import Test
-from django.contrib.auth.decorators import login_required
+# ===================== CREATE NEW TEST =====================
 
 def test_create(request):
+    if not request.user.is_authenticated:
+        return render(request, "login_required.html")
+
     if request.method == "POST":
         title = request.POST.get("title")
         description = request.POST.get("description")
 
-        # створюємо тест
         test = Test.objects.create(
             title=title,
             description=description,
@@ -133,13 +150,13 @@ def test_create(request):
             is_published=True
         )
 
-        # ---- додаємо питання якщо введені (не обовʼязково) ----
+        # Optional: Add question instantly (not required)
         qtext = request.POST.get("qtext")
         opt1 = request.POST.get("opt1")
         opt2 = request.POST.get("opt2")
         opt3 = request.POST.get("opt3")
         opt4 = request.POST.get("opt4")
-        correct = request.POST.get("correct")    # "0", "1", "2", "3"
+        correct = request.POST.get("correct")
 
         if qtext and opt1 and opt2 and opt3 and opt4 and correct is not None:
             q = Question.objects.create(test=test, text=qtext)
@@ -156,6 +173,14 @@ def test_create(request):
 
     return render(request, "tests_create.html")
 
+
+
+def my_tests(request):
+    if not request.user.is_authenticated:
+        return render(request, "login_required.html")
+
+    results = TestResult.objects.filter(user=request.user).order_by("-created_at")
+    return render(request, "my_tests.html", {"results": results})
 
 
 

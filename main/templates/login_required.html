@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Login required</title>
+    <link rel="stylesheet" href="{% static 'css/tests.css' %}">
+</head>
+<body>
+
+<div class="test-container" style="text-align:center; padding-top:80px;">
+    <h1>Please log in first</h1>
+    <p>You must be logged in to access this page.</p>
+
+    <a href="{% url 'login' %}" class="btn" style="margin-top:20px;">Log in</a>
+</div>
+
+</body>
+</html>

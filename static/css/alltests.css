@@ -5,6 +5,8 @@ body {
   font-family: "Poppins", sans-serif;
   background-color: #fafafa;
   color: #222;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ---------- Navbar ---------- */
@@ -42,255 +44,252 @@ body {
   gap: 25px;
 }
 
-.nav-links a {
+.nav-links > a {
   text-decoration: none;
   color: #222;
   font-weight: 500;
   transition: 0.2s;
 }
 
-.nav-links a:hover {
+.nav-links > a:hover {
   color: #b40030;
 }
 
-.nav-links .btn {
-  padding: 8px 16px;
+/* ---------- Buttons ---------- */
+.btn {
+  padding: 8px 18px;
   border-radius: 10px;
   background-color: #b40030;
-  color: #fff;
+  color: #fff !important;
+  font-weight: 600;
   text-decoration: none;
-  font-weight: 600;
   transition: 0.25s;
+  display: inline-block;
 }
 
-.nav-links .btn:hover {
+.btn:hover {
   background-color: #930026;
 }
 
-/* ---------- Test Container ---------- */
-.test-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px 80px;
+.btn.secondary {
+  background-color: #555;
+  color: #fff !important;
 }
 
-/* ---------- Center content ---------- */
-form, h1, p {
-  text-align: center;
+.btn.secondary:hover {
+  background-color: #333;
 }
 
-/* ---------- Title ---------- */
-h1 {
-  font-size: 48px;
-  font-weight: 700;
-  margin-top: 60px;
-  margin-bottom: 15px;
+.small-btn {
+  padding: 7px 16px;
+  font-size: 14px;
 }
 
-/* ---------- Description ---------- */
-h1 + p {
-  font-size: 18px;
-  color: #555;
-  max-width: 700px;
-  margin: 0 auto 50px auto;
-}
-
-/* ---------- Form Container ---------- */
-form {
-  max-width: 800px;
-  margin: 0 auto;
-  text-align: left;
-}
-
-/* ---------- Question Block ---------- */
-.question-block {
-  margin-bottom: 30px;
-}
-
-/* ---------- Question Text ---------- */
-.question-text b,
-form p b {
-  display: block;
-  font-size: 22px;
-  margin-bottom: 15px;
-  color: #111;
-}
-
-/* ---------- Answer Options ---------- */
-.choice-option,
-label {
-  font-size: 18px;
-  display: block;
-  margin-bottom: 8px;
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 6px;
-  transition: 0.2s;
-}
-
-.choice-option:hover,
-label:hover {
-  background-color: #f5f5f5;
-}
-
-input[type="radio"] {
-  margin-right: 8px;
-  accent-color: #b40030;
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
-}
-
-/* ---------- Hide br tags ---------- */
-br {
-  display: none;
-}
-
-/* ---------- Question Divider ---------- */
-hr {
-  margin: 35px 0;
-  border: 0;
-  border-bottom: 1px solid #ddd;
-}
-
-/* ---------- Submit Button ---------- */
-.submit-btn,
-button[type="submit"] {
-  display: block;
-  margin: 40px auto;
-  padding: 12px 28px;
-  font-size: 20px;
-  background-color: #b40030;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  transition: 0.25s;
-}
-
-.submit-btn:hover,
-button[type="submit"]:hover {
-  background-color: #930026;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(180, 0, 48, 0.3);
-}
-
-/* ---------- Result Box ---------- */
-.result-box {
-  max-width: 600px;
-  margin: 60px auto;
-  text-align: center;
-  background-color: #fff;
-  padding: 60px 40px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+/* ---------- Profile Menu ---------- */
+.profile-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
   border: 1px solid #eee;
 }
 
-.result-box h2 {
-  font-size: 32px;
-  font-weight: 700;
+.profile-name {
+  font-weight: 600;
+  color: #111;
+  font-size: 15px;
+  padding-right: 8px;
+  border-right: 1px solid #ddd;
+}
+
+.profile-menu .btn {
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+/* ---------- Logout Button ---------- */
+.logout-btn {
+  background-color: #555 !important;
+}
+
+.logout-btn:hover {
+  background-color: #333 !important;
+}
+
+/* ---------- Tests Container ---------- */
+.tests-container {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 60px 80px;
+  width: 100%;
+}
+
+/* ---------- Tests Header ---------- */
+.tests-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.tests-header h1 {
+  font-size: 48px;
+  font-weight: 800;
   color: #111;
   margin-bottom: 30px;
 }
 
-/* ---------- Retry Button ---------- */
-.retry-btn {
-  font-size: 20px;
+.create-btn {
   display: inline-block;
-  margin-top: 20px;
+  font-size: 16px;
+  padding: 12px 28px;
   background-color: #b40030;
   color: white;
-  padding: 12px 28px;
-  border-radius: 8px;
+  border-radius: 10px;
   text-decoration: none;
   font-weight: 600;
   transition: 0.25s;
-  font-family: "Poppins", sans-serif;
+  box-shadow: 0 2px 8px rgba(180, 0, 48, 0.2);
 }
 
-.retry-btn:hover {
+.create-btn:hover {
   background-color: #930026;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(180, 0, 48, 0.3);
+}
+
+/* ---------- Tests Grid ---------- */
+.tests-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+/* ---------- Test Card ---------- */
+.test-card {
+  background-color: #fff;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  transition: 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.test-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #b40030, #e91e63);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s;
+}
+
+.test-card:hover::before {
+  transform: scaleX(1);
+}
+
+.test-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-color: #b40030;
+}
+
+/* ---------- Test Link ---------- */
+.test-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  padding: 30px;
+}
+
+.test-card h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 12px 0;
+  transition: 0.2s;
+}
+
+.test-card:hover h2 {
+  color: #b40030;
+}
+
+.test-card p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #666;
+  margin: 0 0 16px 0;
+}
+
+.test-link .q-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: #b40030;
+  background-color: #fff5f7;
+  padding: 6px 12px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  text-align: center;
+  padding: 20px 0;
+  border-top: 1px solid #eee;
+  color: #777;
+  font-size: 14px;
+  background-color: #fff;
+  margin-top: auto;
 }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 768px) {
+  .tests-container {
+    padding: 40px 30px 60px;
+  }
+
+  .tests-header h1 {
+    font-size: 36px;
+  }
+
   .navbar {
     padding: 18px 30px;
   }
 
-  .test-container {
-    padding: 20px 15px 60px;
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 
-  h1 {
-    font-size: 36px;
-    margin-top: 40px;
+  .profile-menu {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
   }
 
-  h1 + p {
-    font-size: 16px;
+  .profile-name {
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+    padding-right: 0;
+    padding-bottom: 8px;
   }
 
-  form {
-    padding: 0 20px;
+  .tests-grid {
+    grid-template-columns: 1fr;
   }
 
-  .question-text b,
-  form p b {
-    font-size: 18px;
+  .test-link {
+    padding: 24px;
   }
 
-  .choice-option,
-  label {
-    font-size: 16px;
-    padding: 8px;
+  .test-card h2 {
+    font-size: 20px;
   }
-
-  .submit-btn,
-  button[type="submit"] {
-    font-size: 18px;
-    padding: 10px 24px;
-  }
-
-  .result-box {
-    padding: 40px 30px;
-    margin: 40px auto;
-  }
-
-  .result-box h2 {
-    font-size: 26px;
-  }
-
-  .retry-btn {
-    font-size: 18px;
-    padding: 10px 24px;
-  }
-}
-/* ---------- Code Formatting ---------- */
-.question-text,
-form > p {
-  white-space: pre-wrap;
-  font-family: "Poppins", sans-serif;
-}
-
-.question-text code,
-form > p code,
-label code {
-  display: block;
-  background-color: #f5f5f5;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 12px;
-  margin: 10px 0;
-  font-family: "Courier New", Courier, monospace;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #333;
-  white-space: pre;
-  overflow-x: auto;
 }
