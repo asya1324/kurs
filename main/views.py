@@ -14,7 +14,7 @@ def home(request):
 # ===================== LOGIN PAGE =====================
 
 def login_page(request):
-    return render(request, "login.html")
+    return render(request, "register.html")
 
 
 # ===================== REGISTER =====================
