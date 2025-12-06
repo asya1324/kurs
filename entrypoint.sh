@@ -8,7 +8,7 @@ export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
 
 # ⚠️ Final Gunicorn Command: Added verbose flags and foreground execution
-exec gunicorn your_project_name.wsgi:application \
+exec gunicorn itestoria.wsgi:application \
     --bind 0.0.0.0:10000 \
     --workers 1 \
     --threads 4 \
