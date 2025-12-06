@@ -12,8 +12,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # додати сертифікат
-COPY ca.pem /etc/ssl/certs/tidb-ca.pem
-ENV SSL_CERT_FILE=/etc/ssl/certs/tidb-ca.pem
+COPY ca.pem /etc/ssl/certs/isrgrootx1.pem
+ENV SSL_CERT_FILE=/etc/ssl/certs/isrgrootx1.pem
 
 CMD ["gunicorn", "itestoria.wsgi:application", "--bind", "0.0.0.0:8000"]
 
