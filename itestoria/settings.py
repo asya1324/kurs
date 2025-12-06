@@ -16,35 +16,20 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # --------------------------
 # DATABASE CONFIG
 # --------------------------
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv("DB_HOST"),
+        'PORT': os.getenv("DB_PORT"),
+        "OPTIONS": {
+            "ssl": {"ca": "/etc/ssl/certs/tidb-ca.pem"},
+        }
+    }
+}
 
-if os.environ.get("RENDER"):
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.mysql",
-            "NAME": os.environ.get("DB_NAME"),
-            "USER": os.environ.get("DB_USER"),
-            "PASSWORD": os.environ.get("DB_PASSWORD"),
-            "HOST": os.environ.get("DB_HOST"),
-            "PORT": os.environ.get("DB_PORT", "4000"),
-            "OPTIONS": {
-                "ssl": {
-                    "ca": os.environ.get("SSL_CA")
-                },
-                "charset": "utf8mb4",
-            },
-        }
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.mysql",
-            "NAME": "itestoria_db",
-            "USER": "root",
-            "PASSWORD": "Alfie124.com.ua",
-            "HOST": "localhost",
-            "PORT": "3306",
-        }
-    }
 
 INSTALLED_APPS = [
     'django.contrib.admin',
