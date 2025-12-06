@@ -25,7 +25,7 @@ DATABASES = {
         'HOST': os.getenv("DB_HOST"),
         'PORT': os.getenv("DB_PORT"),
         "OPTIONS": {
-            "ssl": {"ca": "/etc/ssl/certs/tidb-ca.pem"},
+            "ssl": {"ca": "/etc/ssl/certs/isrgrootx1.pem"},
         }
     }
 }
