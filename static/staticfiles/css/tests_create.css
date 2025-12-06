@@ -1,0 +1,242 @@
+/* ---------- Base ---------- */
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  background-color: #fafafa;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Navbar ---------- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 60px;
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+}
+
+.brand .dot {
+  width: 8px;
+  height: 8px;
+  background-color: #b40030;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #222;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.nav-links a:hover {
+  color: #b40030;
+}
+
+.nav-links .btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  background-color: #b40030;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.nav-links .btn:hover {
+  background-color: #930026;
+}
+
+/* ---------- Main Container ---------- */
+.create-container {
+  flex: 1;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 60px 30px 80px;
+  width: 100%;
+}
+
+/* ---------- Page Header ---------- */
+.page-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.page-header h1 {
+  font-size: 42px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 12px;
+}
+
+.page-header p {
+  font-size: 16px;
+  color: #666;
+  font-weight: 400;
+}
+
+/* ---------- Form ---------- */
+.create-form {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #eee;
+}
+
+/* ---------- Form Sections ---------- */
+.form-section {
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #b40030;
+}
+
+.section-divider {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 40px 0;
+}
+
+/* ---------- Form Groups ---------- */
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.form-group input[type="text"],
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 15px;
+  font-family: "Poppins", sans-serif;
+  color: #333;
+  transition: 0.2s;
+  background-color: #fafafa;
+  box-sizing: border-box;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #b40030;
+  background-color: #fff;
+}
+
+.form-group input[type="text"]::placeholder,
+.form-group textarea::placeholder {
+  color: #999;
+}
+
+/* Multiple inputs in one group */
+.form-group input + input {
+  margin-top: 10px;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-group select {
+  cursor: pointer;
+}
+
+/* ---------- Submit Button ---------- */
+.submit-btn {
+  width: 100%;
+  background-color: #b40030;
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.25s;
+  font-family: "Poppins", sans-serif;
+  margin-top: 20px;
+}
+
+.submit-btn:hover {
+  background-color: #930026;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(180, 0, 48, 0.3);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  text-align: center;
+  padding: 20px 0;
+  border-top: 1px solid #eee;
+  color: #777;
+  font-size: 14px;
+  background-color: #fff;
+  margin-top: auto;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 18px 30px;
+  }
+
+  .create-container {
+    padding: 40px 20px 60px;
+  }
+
+  .page-header h1 {
+    font-size: 32px;
+  }
+
+  .create-form {
+    padding: 30px 20px;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+}
