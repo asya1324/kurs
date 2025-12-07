@@ -1,9 +1,6 @@
-# settings.py (Modified to fix ModuleNotFoundError)
-
 import os
 from pathlib import Path
-# REMOVED: import dj_database_url (Causes the crash)
-from urllib.parse import urlparse # 👈 Using built-in module
+from urllib.parse import urlparse
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,47 +17,30 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-# ---------------------------------------------------------
-# DATABASES (TiDB IN PRODUCTION / SQLite LOCALLY)
-# ---------------------------------------------------------
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-if DATABASE_URL:
-    # ⚠️ FIX: Custom parsing using built-in urllib.parse
-    url = urlparse(DATABASE_URL)
-    
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.mysql",
-            "NAME": url.path[1:],
-            "USER": url.username,
-            "PASSWORD": url.password,
-            "HOST": url.hostname,
-            "PORT": url.port,
-            "CONN_MAX_AGE": 600,
-            "OPTIONS": {
-                "init_command": "SET default_storage_engine=INNODB",
-                # Note: SSL configuration below must be handled by the driver (PyMySQL)
-            }
-        }
-    }
+if not DATABASE_URL:
+    raise RuntimeError("DATABASE_URL is required")
 
-    # Required for TiDB / PlanetScale / MySQL
-    DATABASES["default"]["OPTIONS"].update({
-        "ssl": {
-            "ca": "/etc/ssl/certs/ca-certificates.crt"
-        }
-    })
+url = urlparse(DATABASE_URL)
 
-else:
-    # Local fallback
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": url.path.lstrip("/"),
+        "USER": url.username,
+        "PASSWORD": url.password,
+        "HOST": url.hostname,
+        "PORT": url.port,
+        "CONN_MAX_AGE": 300,
+        "OPTIONS": {
+            "charset": "utf8mb4",
+            "ssl": {"ca": "/etc/ssl/certs/ca-certificates.crt"},
+            "init_command": "SET default_storage_engine=INNODB",
+        },
     }
+}
 
 
 INSTALLED_APPS = [
