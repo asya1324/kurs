@@ -5,26 +5,26 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret")
-DEBUG = os.environ.get("DEBUG", "True") == "True"
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    os.environ.get("ALLOWED_HOSTS", ""),
+    os.environ.get("RENDER_EXTERNAL_HOSTNAME", ""),
 ]
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-# --------------------------
-# DATABASE (Render + TiDB)
-# --------------------------
+# ---------------------------------------------------------
+# DATABASES (TiDB IN PRODUCTION / SQLite LOCALLY)
+# ---------------------------------------------------------
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 if DATABASE_URL:
-    # Використовуємо TiDB
+
     DATABASES = {
         "default": dj_database_url.parse(
             DATABASE_URL,
@@ -33,14 +33,16 @@ if DATABASE_URL:
         )
     }
 
-    # MySQL-specific options
+    # Required for TiDB / PlanetScale / MySQL
     DATABASES["default"]["OPTIONS"] = {
         "init_command": "SET default_storage_engine=INNODB",
-        "ssl": {"ca": os.environ.get("SSL_CA", "/etc/ssl/certs/ca-certificates.crt")},
+        "ssl": {
+            "ca": "/etc/ssl/certs/ca-certificates.crt"
+        }
     }
 
 else:
-    # Локально — SQLite
+    # Local fallback
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
