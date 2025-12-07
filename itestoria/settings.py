@@ -1,34 +1,32 @@
 import os
 from pathlib import Path
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret")
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "0") == "1"
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    os.environ.get("ALLOWED_HOSTS", "localhost")
+]
 
-STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-# ==========================
-# DATABASE — ТІЛЬКИ MARIADB
-# ==========================
+# --------------------
+# DATABASE (NO dj_database_url!)
+# --------------------
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "itestoria_db",
-        "USER": "root",
-        "PASSWORD": "Alfie124.com.ua",
-        "HOST": "localhost",
-        "PORT": "3306",
+        "NAME": os.environ.get("DB_NAME"),
+        "USER": os.environ.get("DB_USER"),
+        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": os.environ.get("DB_HOST"),
+        "PORT": os.environ.get("DB_PORT", 4000),
         "OPTIONS": {
-            "init_command": "SET default_storage_engine=INNODB;",
-            "charset": "utf8mb4"
-        },
+            "ssl": {
+                "ca": os.environ.get("SSL_CA")
+            }
+        }
     }
 }
 
