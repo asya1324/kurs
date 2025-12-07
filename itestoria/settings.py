@@ -1,6 +1,9 @@
+# settings.py (Modified to fix ModuleNotFoundError)
+
 import os
 from pathlib import Path
-import dj_database_url
+# REMOVED: import dj_database_url (Causes the crash)
+from urllib.parse import urlparse # 👈 Using built-in module
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,22 +27,31 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 if DATABASE_URL:
-
+    # ⚠️ FIX: Custom parsing using built-in urllib.parse
+    url = urlparse(DATABASE_URL)
+    
     DATABASES = {
-        "default": dj_database_url.parse(
-            DATABASE_URL,
-            conn_max_age=600,
-            ssl_require=True
-        )
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": url.path[1:],
+            "USER": url.username,
+            "PASSWORD": url.password,
+            "HOST": url.hostname,
+            "PORT": url.port,
+            "CONN_MAX_AGE": 600,
+            "OPTIONS": {
+                "init_command": "SET default_storage_engine=INNODB",
+                # Note: SSL configuration below must be handled by the driver (PyMySQL)
+            }
+        }
     }
 
     # Required for TiDB / PlanetScale / MySQL
-    DATABASES["default"]["OPTIONS"] = {
-        "init_command": "SET default_storage_engine=INNODB",
+    DATABASES["default"]["OPTIONS"].update({
         "ssl": {
             "ca": "/etc/ssl/certs/ca-certificates.crt"
         }
-    }
+    })
 
 else:
     # Local fallback
@@ -98,6 +110,5 @@ USE_I18N = True
 USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
 
 
