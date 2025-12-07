@@ -15,3 +15,6 @@ exec gunicorn itestoria.wsgi:application \
     --log-level debug \
     --access-logfile '-' \
     --error-logfile '-'
+
+python manage.py migrate --noinput
+gunicorn itestoria.wsgi:application --bind 0.0.0.0:$PORT
