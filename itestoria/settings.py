@@ -1,12 +1,11 @@
 import os
-import dj_database_url
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret")
 
-DEBUG = os.environ.get("DEBUG", "True") == "True"
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -14,25 +13,23 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# --------------------------
-# DATABASE CONFIG
-# --------------------------
+# ==========================
+# DATABASE — ТІЛЬКИ MARIADB
+# ==========================
 DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',
-        conn_max_age=600
-    )
-}
-
-if DATABASES['default']['ENGINE'] == 'django.db.backends.mysql':
-    DATABASES['default']['OPTIONS'] = {
-        'init_command': "SET default_storage_engine=INNODB", 
-        'ssl': {
-            # This is the dictionary pymysql expects!
-            'ca': '/etc/ssl/certs/tidb_ca.pem' 
-        }
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "itestoria_db",
+        "USER": "root",
+        "PASSWORD": "Alfie124.com.ua",
+        "HOST": "localhost",
+        "PORT": "3306",
+        "OPTIONS": {
+            "init_command": "SET default_storage_engine=INNODB;",
+            "charset": "utf8mb4"
+        },
     }
-
+}
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -81,4 +78,6 @@ USE_I18N = True
 USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
 
