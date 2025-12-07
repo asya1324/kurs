@@ -17,9 +17,7 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-
 DATABASE_URL = os.environ.get("DATABASE_URL")
-
 if not DATABASE_URL:
     raise RuntimeError("DATABASE_URL is required")
 
@@ -33,10 +31,13 @@ DATABASES = {
         "PASSWORD": url.password,
         "HOST": url.hostname,
         "PORT": url.port,
-        "CONN_MAX_AGE": 300,
+        "CONN_MAX_AGE": 0,  # ❗ Render + TiDB не терплять довгі конекшни
         "OPTIONS": {
             "charset": "utf8mb4",
-            "ssl": {"ca": "/etc/ssl/certs/ca-certificates.crt"},
+            "ssl": {
+                "ca": "/etc/ssl/certs/ca-certificates.crt",
+                "cert_reqs": 0  # ❗ уникнути SSL handshake drop на Render
+            },
             "init_command": "SET default_storage_engine=INNODB",
         },
     }
