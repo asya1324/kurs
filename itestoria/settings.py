@@ -4,27 +4,23 @@ from mongoengine import connect
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret")
+
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = ["*"] # Allow all hosts for Render/Docker to work easily
+ALLOWED_HOSTS = ["*"]
 
-# Static files
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.onrender.com",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
 
-# DATABASE CONFIGURATION
-# We use SQLite for Django's internal needs (Sessions, Auth)
-# Your actual data (Users, Tests) lives in MongoDB.
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
+# Application definition
 INSTALLED_APPS = [
+    # "django.contrib.admin", # Disabled for Mongo
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -35,7 +31,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware", # Vital for Render static files
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -55,7 +51,7 @@ TEMPLATES = [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.messages.context_processors.messages",
-                "main.context_processors.current_user", # Our custom Mongo user injector
+                "main.context_processors.current_user",
             ],
         },
     },
@@ -63,25 +59,89 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "itestoria.wsgi.application"
 
+# Database (SQLite for Sessions only)
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+}
+
+# Password validation
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+]
+
+# Internationalization
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
-# WhiteNoise Configuration
+# WhiteNoise for Static Files
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# ------------ MongoDB Connection ------------
-MONGO_URL = os.environ.get("MONGO_URL")
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Only connect if MONGO_URL is provided (prevents build crashes if env missing)
+# MongoDB Connection
+MONGO_URL = os.environ.get("MONGO_URL")
 if MONGO_URL:
     try:
         connect(host=MONGO_URL, alias="default")
-        print("Successfully connected to MongoDB.")
+        print("Connected to MongoDB.")
     except Exception as e:
-        print(f"Error connecting to MongoDB: {e}")
+        print(f"Mongo Connection Error: {e}")
 else:
-    print("WARNING: MONGO_URL not found in environment variables.")
+    print("WARNING: MONGO_URL not set.")
+
+
+# --- LOGGING CONFIGURATION (Fixes Silent 500 Errors) ---
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
