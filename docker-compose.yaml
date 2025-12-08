@@ -3,22 +3,17 @@ version: '3.8'
 services:
   web:
     build: .
-    # Use the entrypoint script we just fixed
     command: bash /app/entrypoint.sh
     volumes:
       - .:/app
-      # CRITICAL FIX: This creates an anonymous volume for /app/main/migrations
-      # It prevents your local 'main/migrations' folder from overriding the
-      # empty one inside the container. This stops the old SQL migrations from loading.
+      # Block local migrations from overriding container
       - /app/main/migrations
     ports:
       - "8000:8000"
     environment:
       - PORT=8000
       - DEBUG=True
-      - MONGO_URL=${MONGO_URL} # Ensure this is in your .env file
+      # PASTE YOUR MONGO URL HERE FOR LOCAL DOCKER
+      - MONGO_URL=${MONGO_URL} 
     env_file:
       - .env
-
-volumes:
-  db_data:

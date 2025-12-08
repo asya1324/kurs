@@ -4,69 +4,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ test.title }} – Itestoria</title>
+    <title>{{ test.title }}</title>
     <link rel="stylesheet" href="{% static 'css/tests.css' %}">
 </head>
 <body>
+    <header class="navbar">
+        <div class="brand">Itestoria<span class="dot"></span></div>
+        <nav class="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'tests' %}">Tests</a>
+            {% if user.is_authenticated %}
+                <span class="profile-name">{{ user.username }}</span>
+                <a href="{% url 'logout' %}" class="btn small-btn logout-btn">Logout</a>
+            {% endif %}
+        </nav>
+    </header>
 
-<header class="navbar">
-    <div class="brand">Itestoria<span class="dot"></span></div>
-    <nav class="nav-links">
-        <a href="{% url 'home' %}">Home</a>
-        <a href="{% url 'tests' %}">Tests</a>
-        {% if user.is_authenticated %}
-        <div class="profile-menu">
-            <span class="profile-name">{{ user.username }}</span>
-            <a href="{% url 'my_tests' %}" class="btn small-btn">My tests</a>
-            <a href="{% url 'logout' %}" class="btn small-btn logout-btn">Logout</a>
+    <main class="test-container">
+        <div class="test-header">
+            <h1>{{ test.title }}</h1>
+            <p>{{ test.description }}</p>
         </div>
-        {% else %}
-            <a href="{% url 'register' %}" class="btn">Sign up</a>
-            <a href="{% url 'login' %}" class="btn secondary">Log in</a>
-        {% endif %}
-    </nav>
-</header>
 
-<main class="test-container">
-    <div class="test-header">
-        <h1>{{ test.title }}</h1>
-        <p class="test-description">{{ test.description }}</p>
-    </div>
-
-    {% if score is None %}
-    <form method="post" class="test-form">
-        {% csrf_token %}
-
-        {% for q in test.questions %}
-        <div class="question-block">
-            <p class="question-text"><strong>{{ forloop.counter }}. {{ q.text }}</strong></p>
-
-            <div class="choices-container">
-                <!-- FIXED: Use the model property q.choices directly -->
-                {% for c in q.choices %}
-                <label class="choice-option">
-                    <input type="radio" name="q{{ q.id }}" value="{{ c.id }}" required>
-                    <span>{{ c.text }}</span>
-                </label>
-                {% endfor %}
+        {% if score is None %}
+        <form method="post" class="test-form">
+            {% csrf_token %}
+            {% for q in test.questions %}
+            <div class="question-block">
+                <p><strong>{{ forloop.counter }}. {{ q.text }}</strong></p>
+                <div class="choices-container">
+                    {% for c in q.choices %}
+                    <label class="choice-option">
+                        <input type="radio" name="q{{ q.id }}" value="{{ c.id }}" required>
+                        <span>{{ c.text }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
             </div>
+            {% endfor %}
+            <button class="submit-btn" type="submit">Submit</button>
+        </form>
+        {% else %}
+        <div class="result-box">
+            <h2>Your Score: {{ score }} / {{ total }}</h2>
+            <a href="{% url 'tests' %}" class="retry-btn">Back to Tests</a>
         </div>
-        {% endfor %}
-
-        <button class="submit-btn" type="submit">Submit Test</button>
-    </form>
-
-    {% else %}
-    <div class="result-box">
-        <h2>Your Score: {{ score }} / {{ total }}</h2>
-        <a href="{% url 'test_detail' test.id %}" class="retry-btn">Try Again</a>
-    </div>
-    {% endif %}
-</main>
-
-<footer class="footer">
-    © 2025 Itestoria. All rights reserved.
-</footer>
-
+        {% endif %}
+    </main>
 </body>
 </html>

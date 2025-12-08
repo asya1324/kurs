@@ -1,20 +1,24 @@
-#!/bin/bash
+#!/bin/sh
+
+# Exit immediately if a command exits with a non-zero status
 set -e
 
-# 1. Collect static files (CSS/Images)
-echo "Collecting static files..."
-python manage.py collectstatic --noinput
+# Apply migrations
+echo "Applying database migrations (SQLite for Sessions/Auth)..."
+python manage.py migrate --no-input
 
-# 2. Apply Django migrations 
-# (This is ONLY for the SQLite database that handles Sessions/Admin login)
-# (It does NOT touch your MongoDB data)
-echo "Applying internal SQLite migrations..."
-python manage.py migrate --noinput
+# Debugging: Show what command is being attempted
+echo "Starting application..."
+echo "Received command args: '$@'"
 
-# 3. Start Gunicorn server
-# We use exec to let Gunicorn take over the PID 1 for proper signal handling
-echo "Starting Gunicorn..."
-exec gunicorn itestoria.wsgi:application \
-  --bind 0.0.0.0:$PORT \
-  --workers 3 \
-  --timeout 120
+# Determine the port: Use the PORT env var if set (Render), otherwise 8000 (Local)
+PORT="${PORT:-8000}"
+
+# If no command is provided (CMD is empty), run Gunicorn
+if [ -z "$1" ]; then
+    echo "No command provided. Defaulting to Gunicorn on port $PORT..."
+    exec gunicorn itestoria.wsgi:application --bind "0.0.0.0:$PORT"
+else
+    echo "Executing received command: $@"
+    exec "$@"
+fi

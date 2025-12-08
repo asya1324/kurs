@@ -9,27 +9,22 @@ from mongoengine import (
     IntField,
 )
 
+# Helper for templates when no user is logged in
 class AnonymousUser:
-    """
-    A helper class to mock the Django AnonymousUser
-    but for our Mongo setup.
-    """
     is_authenticated = False
     username = ""
     id = None
-    pk = None
 
 class User(Document):
     username = StringField(required=True, unique=True, max_length=150)
     email = EmailField(required=True, unique=True)
-    password = StringField(required=True)  # storing HMAC hash
+    password = StringField(required=True)
     is_active = BooleanField(default=True)
 
     meta = {"collection": "users"}
 
     @property
     def is_authenticated(self):
-        """Always return True for a valid user object."""
         return True
 
 class Test(Document):
