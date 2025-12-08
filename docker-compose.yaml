@@ -1,15 +1,22 @@
-
 version: '3.8'
 
 services:
   web:
     build: .
-    command: gunicorn itestoria.wsgi:application --bind 0.0.0.0:8000
+    # Use the entrypoint script we just fixed
+    command: bash /app/entrypoint.sh
     volumes:
       - .:/app
-      - ./isrgrootx1.pem:/etc/ssl/certs/tidb_ca.pem
+      # CRITICAL FIX: This creates an anonymous volume for /app/main/migrations
+      # It prevents your local 'main/migrations' folder from overriding the
+      # empty one inside the container. This stops the old SQL migrations from loading.
+      - /app/main/migrations
     ports:
       - "8000:8000"
+    environment:
+      - PORT=8000
+      - DEBUG=True
+      - MONGO_URL=${MONGO_URL} # Ensure this is in your .env file
     env_file:
       - .env
 

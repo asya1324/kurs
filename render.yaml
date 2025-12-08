@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: itestoria
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn itestoria.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SECRET_KEY
+        generateValue: true
+      - key: MONGO_URL
+        sync: false
+      - key: DEBUG
+        value: "False"
+      - key: WEB_CONCURRENCY
+        value: "4"

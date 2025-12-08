@@ -1,37 +1,72 @@
-from django.db import models
-from django.contrib.auth import get_user_model
+from datetime import datetime
+from mongoengine import (
+    Document,
+    StringField,
+    BooleanField,
+    ReferenceField,
+    DateTimeField,
+    EmailField,
+    IntField,
+)
 
-User = get_user_model()
+class AnonymousUser:
+    """
+    A helper class to mock the Django AnonymousUser
+    but for our Mongo setup.
+    """
+    is_authenticated = False
+    username = ""
+    id = None
+    pk = None
 
-class Test(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tests")
-    is_published = models.BooleanField(default=True)
+class User(Document):
+    username = StringField(required=True, unique=True, max_length=150)
+    email = EmailField(required=True, unique=True)
+    password = StringField(required=True)  # storing HMAC hash
+    is_active = BooleanField(default=True)
 
-    def __str__(self):
-        return self.title
+    meta = {"collection": "users"}
 
+    @property
+    def is_authenticated(self):
+        """Always return True for a valid user object."""
+        return True
 
-class Question(models.Model):
-    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name="questions")
-    text = models.TextField()
-    qtype = models.CharField(max_length=10, default="single")
+class Test(Document):
+    title = StringField(required=True, max_length=200)
+    description = StringField()
+    author_id = StringField()
+    is_published = BooleanField(default=True)
 
+    meta = {"collection": "tests"}
 
-class Choice(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="choices")
-    text = models.CharField(max_length=300)
-    is_correct = models.BooleanField(default=False)
+    @property
+    def questions(self):
+        return Question.objects(test=self)
 
+class Question(Document):
+    test = ReferenceField(Test, required=True)
+    text = StringField(required=True)
+    qtype = StringField(default="single", max_length=10)
 
-class TestResult(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    test = models.ForeignKey(Test, on_delete=models.CASCADE)
-    score = models.IntegerField()
-    total = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    meta = {"collection": "questions"}
 
-    def __str__(self):
-        return f"{self.user.username} - {self.test.title} ({self.score}/{self.total})"
+    @property
+    def choices(self):
+        return Choice.objects(question=self)
 
+class Choice(Document):
+    question = ReferenceField(Question, required=True)
+    text = StringField(required=True, max_length=300)
+    is_correct = BooleanField(default=False)
+
+    meta = {"collection": "choices"}
+
+class TestResult(Document):
+    user = ReferenceField(User, required=True)
+    test = ReferenceField(Test, required=True)
+    score = IntField(required=True)
+    total = IntField(required=True)
+    created_at = DateTimeField(default=datetime.utcnow)
+
+    meta = {"collection": "test_results"}

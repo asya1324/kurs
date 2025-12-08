@@ -1,20 +1,20 @@
-#!/bin/sh
+#!/bin/bash
+set -e
 
-# 1. HARDCODE THE PATH: This path is now confirmed to be correct.
-export REQUESTS_CA_BUNDLE=/usr/local/lib/python3.12/site-packages/certifi/cacert.pem
+# 1. Collect static files (CSS/Images)
+echo "Collecting static files..."
+python manage.py collectstatic --noinput
 
-# 2. Add system CAs as a fallback (optional, but robust)
-export SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
-
-
-# ⚠️ Final Gunicorn Command: Added verbose flags and foreground execution
-exec gunicorn itestoria.wsgi:application \
-    --bind 0.0.0.0:10000 \
-    --workers 1 \
-    --threads 4 \
-    --log-level debug \
-    --access-logfile '-' \
-    --error-logfile '-'
-
+# 2. Apply Django migrations 
+# (This is ONLY for the SQLite database that handles Sessions/Admin login)
+# (It does NOT touch your MongoDB data)
+echo "Applying internal SQLite migrations..."
 python manage.py migrate --noinput
-gunicorn itestoria.wsgi:application --bind 0.0.0.0:$PORT
+
+# 3. Start Gunicorn server
+# We use exec to let Gunicorn take over the PID 1 for proper signal handling
+echo "Starting Gunicorn..."
+exec gunicorn itestoria.wsgi:application \
+  --bind 0.0.0.0:$PORT \
+  --workers 3 \
+  --timeout 120

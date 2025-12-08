@@ -1,51 +1,30 @@
 import os
 from pathlib import Path
-from urllib.parse import urlparse
+from mongoengine import connect
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
-    os.environ.get("RENDER_EXTERNAL_HOSTNAME", ""),
-]
+ALLOWED_HOSTS = ["*"] # Allow all hosts for Render/Docker to work easily
 
+# Static files
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
-if not DATABASE_URL:
-    raise RuntimeError("DATABASE_URL is required")
-
-url = urlparse(DATABASE_URL)
-
+# DATABASE CONFIGURATION
+# We use SQLite for Django's internal needs (Sessions, Auth)
+# Your actual data (Users, Tests) lives in MongoDB.
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": url.path.lstrip("/"),
-        "USER": url.username,
-        "PASSWORD": url.password,
-        "HOST": url.hostname,
-        "PORT": url.port,
-        "CONN_MAX_AGE": 0,  # ❗ Render + TiDB не терплять довгі конекшни
-        "OPTIONS": {
-            "charset": "utf8mb4",
-            "ssl": {
-                "ca": "/etc/ssl/certs/ca-certificates.crt",
-                "cert_reqs": 0  # ❗ уникнути SSL handshake drop на Render
-            },
-            "init_command": "SET default_storage_engine=INNODB",
-        },
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
-
 INSTALLED_APPS = [
-    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -56,11 +35,10 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware", # Vital for Render static files
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -76,8 +54,8 @@ TEMPLATES = [
             "context_processors": [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "main.context_processors.current_user", # Our custom Mongo user injector
             ],
         },
     },
@@ -92,4 +70,18 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# WhiteNoise Configuration
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+# ------------ MongoDB Connection ------------
+MONGO_URL = os.environ.get("MONGO_URL")
+
+# Only connect if MONGO_URL is provided (prevents build crashes if env missing)
+if MONGO_URL:
+    try:
+        connect(host=MONGO_URL, alias="default")
+        print("Successfully connected to MongoDB.")
+    except Exception as e:
+        print(f"Error connecting to MongoDB: {e}")
+else:
+    print("WARNING: MONGO_URL not found in environment variables.")

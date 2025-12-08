@@ -1,23 +1,28 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login as django_login, logout
-from django.contrib.auth.models import User
-from .models import Test, Question, Choice
-from .models import TestResult
+from django.shortcuts import render, redirect
+from django.http import Http404
+from django.contrib.auth.hashers import make_password, check_password
+
+# FIXED: Import from .models, not .mongo_models
+from .models import User, Test, Question, Choice, TestResult
 
 
-# ===================== HOME =====================
+def get_current_user(request):
+    uid = request.session.get("user_id")
+    if not uid:
+        return None
+    try:
+        return User.objects.get(id=uid)
+    except User.DoesNotExist:
+        return None
+
+
+# ----------------- HOME -----------------
 
 def home(request):
     return render(request, "home.html")
 
 
-# ===================== LOGIN PAGE =====================
-
-def login_page(request):
-    return render(request, "register.html")
-
-
-# ===================== REGISTER =====================
+# ----------------- REGISTER -----------------
 
 def register(request):
     if request.method == "POST":
@@ -29,128 +34,133 @@ def register(request):
         if password1 != password2:
             return render(request, "register.html", {"error": "Passwords do not match"})
 
-        if User.objects.filter(username=username).exists():
+        if User.objects(username=username).first():
             return render(request, "register.html", {"error": "Username already taken"})
 
-        if User.objects.filter(email=email).exists():
+        if User.objects(email=email).first():
             return render(request, "register.html", {"error": "Email already in use"})
 
-        user = User.objects.create_user(
+        user = User(
             username=username,
             email=email,
-            password=password1
-        )
-        django_login(request, user)
+            password=make_password(password1),
+        ).save()
+
+        request.session["user_id"] = str(user.id)
         return redirect("home")
 
     return render(request, "register.html")
 
 
-# ===================== LOGIN LOGIC =====================
+# ----------------- LOGIN -----------------
 
-def simple_login(request):
+def login_view(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        user = authenticate(request, username=username, password=password)
-
-        if user:
-            django_login(request, user)
+        user = User.objects(username=username).first()
+        if user and check_password(password, user.password):
+            request.session["user_id"] = str(user.id)
             return redirect("home")
-        else:
-            return render(request, "login.html", {"error": "Invalid username or password"})
 
-    # GET → просто повертаємо сторінку логіну
-    return render(request, "login.html")
+        return render(
+            request,
+            "register.html",
+            {"login_error": "Invalid username or password"},
+        )
+
+    # login form is inside register.html
+    return redirect("register")
 
 
-# ===================== LOGOUT =====================
+# ----------------- LOGOUT -----------------
 
-def simple_logout(request):
-    logout(request)
+def logout_view(request):
+    request.session.flush()
     return redirect("home")
 
 
-# ===================== VIEW ALL TESTS =====================
+# ----------------- ALL TESTS -----------------
 
 def tests(request):
-    tests = Test.objects.all()
-    return render(request, "tests.html", {"tests": tests})
+    tests_qs = Test.objects.all()
+    # We need to manually calculate question counts or pass a list of tuples
+    # because 'test.questions' is a property method helper, not a direct field
+    # But checking your template: {% for test, qcount in tests %}
+    # This expects an iterable of tuples.
+    
+    data = []
+    for t in tests_qs:
+        # t.questions returns a QuerySet, so .count() works efficiently
+        data.append((t, t.questions.count()))
+        
+    return render(request, "tests.html", {"tests": data})
 
 
-# ===================== VIEW ONLY USER TESTS =====================
-
-def my_tests(request):
-    if not request.user.is_authenticated:
-        return render(request, "login_required.html")
-
-    tests = Test.objects.filter(author=request.user)
-    return render(request, "my_tests.html", {"tests": tests})
-
-
-# ===================== TAKE TEST (DETAIL + ANSWER FORM) =====================
+# ----------------- TEST DETAIL / TAKE -----------------
 
 def test_detail(request, id):
-    if not request.user.is_authenticated:
+    user = get_current_user(request)
+    if not user:
         return render(request, "login_required.html")
 
-    test = get_object_or_404(Test, id=id)
+    try:
+        test = Test.objects.get(id=id)
+    except Test.DoesNotExist:
+        raise Http404("Test not found")
 
-    total = test.questions.count()
-    score = None  # значення за замовчуванням
+    questions = list(test.questions)
+    total = len(questions)
+    score = None
 
     if request.method == "POST":
         score = 0
-        for q in test.questions.all():
+        for q in questions:
             field = f"q{q.id}"
             chosen_id = request.POST.get(field)
-
-            if chosen_id:
+            if not chosen_id:
+                continue
+            try:
                 chosen = Choice.objects.get(id=chosen_id)
-                if chosen.is_correct:
-                    score += 1
+            except Choice.DoesNotExist:
+                continue
+            if chosen.is_correct:
+                score += 1
 
-        # ЗБЕРІГАЄМО РЕЗУЛЬТАТ
-        TestResult.objects.create(
-            user=request.user,
-            test=test,
-            score=score,
-            total=total
-        )
+        TestResult(user=user, test=test, score=score, total=total).save()
 
         return render(
             request,
             "test_take.html",
-            {"test": test, "score": score, "total": total}
+            {"test": test, "score": score, "total": total},
         )
 
-    # GET запит (просто відкрити тест)
     return render(
         request,
         "test_take.html",
-        {"test": test, "score": score, "total": total}
+        {"test": test, "score": score, "total": total},
     )
 
 
-# ===================== CREATE NEW TEST =====================
+# ----------------- CREATE TEST -----------------
 
 def test_create(request):
-    if not request.user.is_authenticated:
+    user = get_current_user(request)
+    if not user:
         return render(request, "login_required.html")
 
     if request.method == "POST":
         title = request.POST.get("title")
         description = request.POST.get("description")
 
-        test = Test.objects.create(
+        test = Test(
             title=title,
             description=description,
-            author=request.user,
-            is_published=True
-        )
+            author_id=str(user.id),
+            is_published=True,
+        ).save()
 
-        # Optional: Add question instantly (not required)
         qtext = request.POST.get("qtext")
         opt1 = request.POST.get("opt1")
         opt2 = request.POST.get("opt2")
@@ -158,29 +168,31 @@ def test_create(request):
         opt4 = request.POST.get("opt4")
         correct = request.POST.get("correct")
 
-        if qtext and opt1 and opt2 and opt3 and opt4 and correct is not None:
-            q = Question.objects.create(test=test, text=qtext)
-
+        # Basic validation
+        if qtext and opt1 and opt2:
+            q = Question(test=test, text=qtext).save()
             options = [opt1, opt2, opt3, opt4]
+            # Filter out empty options if needed, but your form usually sends them empty
+            
             for idx, text in enumerate(options):
-                Choice.objects.create(
-                    question=q,
-                    text=text,
-                    is_correct=(idx == int(correct))
-                )
+                if text: # Only save non-empty options
+                    Choice(
+                        question=q,
+                        text=text,
+                        is_correct=(idx == int(correct)),
+                    ).save()
 
         return redirect("tests")
 
     return render(request, "tests_create.html")
 
 
+# ----------------- MY RESULTS -----------------
 
 def my_tests(request):
-    if not request.user.is_authenticated:
+    user = get_current_user(request)
+    if not user:
         return render(request, "login_required.html")
 
-    results = TestResult.objects.filter(user=request.user).order_by("-created_at")
+    results = TestResult.objects(user=user).order_by("-created_at")
     return render(request, "my_tests.html", {"results": results})
-
-
-
