@@ -3,57 +3,186 @@
 {% load static %}
 <head>
     <meta charset="UTF-8">
-    <title>Create Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a New Test – Itestoria</title>
     <link rel="stylesheet" href="{% static 'css/tests_create.css' %}">
 </head>
 <body>
     <header class="navbar">
-        <div class="brand">Itestoria<span class="dot"></span></div>
+        <div class="brand">
+            Itestoria<span class="dot"></span>
+        </div>
         <nav class="nav-links">
             <a href="{% url 'home' %}">Home</a>
             <a href="{% url 'tests' %}">Tests</a>
             {% if user.is_authenticated %}
-                <span class="profile-name">{{ user.username }}</span>
+            <span class="profile-name">{{ user.username }}</span>
+            {% else %}
+            <a href="{% url 'register' %}" class="btn">Sign up</a>
             {% endif %}
         </nav>
     </header>
 
     <main class="create-container">
-        <h1>Create a New Test</h1>
-        <form method="POST" class="create-form">
+        <div class="page-header">
+            <h1>Create a New Test</h1>
+            <p>Fill in the details below to create your custom test</p>
+        </div>
+
+        <form method="POST" class="create-form" id="createTestForm">
             {% csrf_token %}
-            <div class="form-group">
-                <label>Title</label>
-                <input type="text" name="title" required>
+            
+            <div class="form-section">
+                <h3 class="section-title">Test Info</h3>
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" name="title" placeholder="e.g., Python Basics Test" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" rows="3" placeholder="Describe what this test covers..." required></textarea>
+                </div>
             </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea name="description" required></textarea>
+
+            <hr class="section-divider">
+
+            <div id="questions-container">
+                <div class="form-section question-block" data-question-number="1">
+                    <div class="question-header">
+                        <h3 class="section-title">Question 1</h3>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Question Text</label>
+                        <textarea name="qtext_1" rows="4" placeholder="Enter your question here..." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Options</label>
+                        <input name="opt1_1" placeholder="Option 1" required>
+                        <input name="opt2_1" placeholder="Option 2" required>
+                        <input name="opt3_1" placeholder="Option 3">
+                        <input name="opt4_1" placeholder="Option 4">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Correct Answer</label>
+                        <select name="correct_1" required>
+                            <option value="0">Option 1</option>
+                            <option value="1">Option 2</option>
+                            <option value="2">Option 3</option>
+                            <option value="3">Option 4</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <hr>
-            <h3>Add First Question</h3>
-            <div class="form-group">
-                <label>Question</label>
-                <textarea name="qtext"></textarea>
-            </div>
-            <div class="form-group">
-                <label>Options</label>
-                <input name="opt1" placeholder="Option 1" required>
-                <input name="opt2" placeholder="Option 2" required>
-                <input name="opt3" placeholder="Option 3">
-                <input name="opt4" placeholder="Option 4">
-            </div>
-            <div class="form-group">
-                <label>Correct Answer</label>
-                <select name="correct">
-                    <option value="0">Option 1</option>
-                    <option value="1">Option 2</option>
-                    <option value="2">Option 3</option>
-                    <option value="3">Option 4</option>
-                </select>
-            </div>
+
+            <button type="button" class="add-question-btn" onclick="addQuestion()">
+                + Add Another Question
+            </button>
+
             <button type="submit" class="submit-btn">Create Test</button>
         </form>
     </main>
+
+    <footer class="footer">
+        © 2025 Itestoria. All rights reserved.
+    </footer>
+
+    <script>
+        let questionCount = 1;
+
+        function addQuestion() {
+            questionCount++;
+            
+            const container = document.getElementById('questions-container');
+            
+            // Create new question section
+            const questionSection = document.createElement('div');
+            questionSection.className = 'form-section question-block';
+            questionSection.setAttribute('data-question-number', questionCount);
+            
+            questionSection.innerHTML = `
+                <div class="question-header">
+                    <h3 class="section-title">Question ${questionCount}</h3>
+                    <button type="button" class="remove-question-btn" onclick="removeQuestion(this)">
+                        ✕ Remove
+                    </button>
+                </div>
+                
+                <div class="form-group">
+                    <label>Question Text</label>
+                    <textarea name="qtext_${questionCount}" rows="4" placeholder="Enter your question here..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Options</label>
+                    <input name="opt1_${questionCount}" placeholder="Option 1" required>
+                    <input name="opt2_${questionCount}" placeholder="Option 2" required>
+                    <input name="opt3_${questionCount}" placeholder="Option 3">
+                    <input name="opt4_${questionCount}" placeholder="Option 4">
+                </div>
+
+                <div class="form-group">
+                    <label>Correct Answer</label>
+                    <select name="correct_${questionCount}" required>
+                        <option value="0">Option 1</option>
+                        <option value="1">Option 2</option>
+                        <option value="2">Option 3</option>
+                        <option value="3">Option 4</option>
+                    </select>
+                </div>
+
+                <hr class="section-divider">
+            `;
+            
+            container.appendChild(questionSection);
+            
+            // Scroll to new question
+            questionSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function removeQuestion(button) {
+            const questionBlock = button.closest('.question-block');
+            questionBlock.remove();
+            renumberQuestions();
+        }
+
+        function renumberQuestions() {
+            const questionBlocks = document.querySelectorAll('.question-block');
+            questionCount = questionBlocks.length;
+            
+            questionBlocks.forEach((block, index) => {
+                const number = index + 1;
+                block.setAttribute('data-question-number', number);
+                
+                // Update title
+                const title = block.querySelector('.section-title');
+                title.textContent = 'Question ' + number;
+                
+                // Update field names
+                const textarea = block.querySelector('textarea');
+                textarea.name = 'qtext_' + number;
+                
+                const inputs = block.querySelectorAll('input[type="text"]');
+                inputs.forEach((input, i) => {
+                    input.name = 'opt' + (i + 1) + '_' + number;
+                });
+                
+                const select = block.querySelector('select');
+                select.name = 'correct_' + number;
+            });
+        }
+
+        // Add input for question count before form submission
+        document.getElementById('createTestForm').addEventListener('submit', function(e) {
+            // Add hidden input with total question count
+            const countInput = document.createElement('input');
+            countInput.type = 'hidden';
+            countInput.name = 'question_count';
+            countInput.value = questionCount;
+            this.appendChild(countInput);
+        });
+    </script>
 </body>
 </html>

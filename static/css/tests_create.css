@@ -44,35 +44,77 @@ body {
   gap: 25px;
 }
 
-.nav-links a {
+.nav-links > a {
   text-decoration: none;
   color: #222;
   font-weight: 500;
   transition: 0.2s;
 }
 
-.nav-links a:hover {
+.nav-links > a:hover {
   color: #b40030;
 }
 
-.nav-links .btn {
-  padding: 8px 16px;
+/* ---------- Buttons ---------- */
+.btn {
+  padding: 8px 18px;
   border-radius: 10px;
   background-color: #b40030;
-  color: #fff;
-  text-decoration: none;
+  color: #fff !important;
   font-weight: 600;
+  text-decoration: none;
   transition: 0.25s;
+  display: inline-block;
 }
 
-.nav-links .btn:hover {
+.btn:hover {
   background-color: #930026;
+}
+
+.btn.secondary {
+  background-color: #555;
+}
+
+.btn.secondary:hover {
+  background-color: #333;
+}
+
+/* ---------- Profile Menu ---------- */
+.profile-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  border: 1px solid #eee;
+}
+
+.profile-name {
+  font-weight: 600;
+  color: #111;
+  font-size: 15px;
+  padding-right: 8px;
+  border-right: 1px solid #ddd;
+}
+
+.profile-menu .btn {
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+.logout-btn {
+  background-color: #555 !important;
+}
+
+.logout-btn:hover {
+  background-color: #333 !important;
 }
 
 /* ---------- Main Container ---------- */
 .create-container {
   flex: 1;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 60px 30px 80px;
   width: 100%;
@@ -181,6 +223,66 @@ body {
   cursor: pointer;
 }
 
+/* ---------- Question Management ---------- */
+.question-block {
+  position: relative;
+  margin-bottom: 30px;
+  padding: 30px;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  border: 1px solid #e5e5e5;
+}
+
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.remove-question-btn {
+  background-color: #dc3545;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.25s;
+  font-family: "Poppins", sans-serif;
+}
+
+.remove-question-btn:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.add-question-btn {
+  background-color: #28a745;
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.25s;
+  margin-bottom: 20px;
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+}
+
+.add-question-btn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+#questions-container {
+  margin-bottom: 20px;
+}
+
 /* ---------- Submit Button ---------- */
 .submit-btn {
   width: 100%;
@@ -238,5 +340,27 @@ body {
 
   .section-title {
     font-size: 20px;
+  }
+
+  .question-block {
+    padding: 20px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .profile-menu {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .profile-name {
+    border-right: none;
+    border-bottom: 1px solid #ddd;
+    padding-right: 0;
+    padding-bottom: 8px;
   }
 }

@@ -149,41 +149,45 @@ def test_create(request):
     user = get_current_user(request)
     if not user:
         return render(request, "login_required.html")
-
+    
     if request.method == "POST":
         title = request.POST.get("title")
         description = request.POST.get("description")
-
+        question_count = int(request.POST.get("question_count", 1))
+        
+        # Create test
         test = Test(
             title=title,
             description=description,
             author_id=str(user.id),
             is_published=True,
         ).save()
-
-        qtext = request.POST.get("qtext")
-        opt1 = request.POST.get("opt1")
-        opt2 = request.POST.get("opt2")
-        opt3 = request.POST.get("opt3")
-        opt4 = request.POST.get("opt4")
-        correct = request.POST.get("correct")
-
-        # Basic validation
-        if qtext and opt1 and opt2:
-            q = Question(test=test, text=qtext).save()
-            options = [opt1, opt2, opt3, opt4]
-            # Filter out empty options if needed, but your form usually sends them empty
+        
+        # Loop through all questions
+        for i in range(1, question_count + 1):
+            qtext = request.POST.get(f"qtext_{i}")
+            opt1 = request.POST.get(f"opt1_{i}")
+            opt2 = request.POST.get(f"opt2_{i}")
+            opt3 = request.POST.get(f"opt3_{i}")
+            opt4 = request.POST.get(f"opt4_{i}")
+            correct = request.POST.get(f"correct_{i}")
             
-            for idx, text in enumerate(options):
-                if text: # Only save non-empty options
-                    Choice(
-                        question=q,
-                        text=text,
-                        is_correct=(idx == int(correct)),
-                    ).save()
-
+            # Basic validation
+            if qtext and opt1 and opt2:
+                q = Question(test=test, text=qtext).save()
+                options = [opt1, opt2, opt3, opt4]
+                
+                # Filter out empty options if needed
+                for idx, text in enumerate(options):
+                    if text:  # Only save non-empty options
+                        Choice(
+                            question=q,
+                            text=text,
+                            is_correct=(idx == int(correct)),
+                        ).save()
+        
         return redirect("tests")
-
+    
     return render(request, "tests_create.html")
 
 
